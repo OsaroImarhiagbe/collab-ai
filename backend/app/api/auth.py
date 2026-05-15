@@ -10,6 +10,7 @@ from backend.app.core.config import get_settings
 from backend.app.schemas.user import User
 from app.api.dependencies import get_auth_service
 from app.services.authService import AuthService
+from app.schemas.user.user import UserRequest
 settings = get_settings()
 # For demonstration purposes - in a real app, you'd use a database
 
@@ -38,38 +39,15 @@ fake_users_db = {
 router = APIRouter(prefix=f"{settings.API_V1_STR}/auth",tags=["auth"])
 
 @router.post('/login',response_model=Token,tags=['auth'])
-async def login_for_access_token(service: get_auth_service_dependency, form_data: OAuth2PasswordRequestForm = Depends()) -> Any:
+async def login_for_access_token(service: get_auth_service_dependency,request: UserRequest, form_data: OAuth2PasswordRequestForm = Depends()) -> Any:
    """
     OAuth2 compatible token login, returns an access token
     """
-   
-   user = fake_users_db.get(form_data.username)
+   response = await service.login_user(request)
 
-   if not user or not verify_password(form_data.password, user["hased_password"]):
-      raise HTTPException(
-         status_code=status.HTTP_401_UNAUTHORIZED,
-         detail='Incorrect email or password',
-         headers={"WWW-Authenticate":"Bearer"})
-   
-   if not user["is_active"]:
-      raise HTTPException(
-         status_code=status.HTTP_400_BAD_REQUEST, detail='Inactive user')
-   
-   access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+   return response
 
-   access_token = create_access_token(
-        subject=user["email"],
-        roles=user["roles"],
-        expires_delta=access_token_expires
-    )
    
-   refresh_token = create_refresh_token(subject=user["email"])
-
-   return {
-        "access_token": access_token,
-        "refresh_token": refresh_token,
-        "token_type": "bearer"
-    }
 
 @router.get('/refresh',response_model=Token,tags=['auth'])
 async def refresh_token(refresh_token:str) -> Any:

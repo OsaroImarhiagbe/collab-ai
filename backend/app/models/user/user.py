@@ -15,7 +15,7 @@ class User(Base):
 
     id:Mapped[UUID] = mapped_column(primary_key=True, index=True,unique=True,server_default=uuid.uuid4())
     email:Mapped[str] = mapped_column(String(30),unique=True,nullable=False)
-    password:Mapped[str] = mapped_column(String(100),unique=True,nullable=False)
+    hashed_password:Mapped[str] = mapped_column(String(100),unique=True,nullable=False)
     name:Mapped[str] = mapped_column(String(30),nullable=False)
     is_active:Mapped[BOOLEAN] = mapped_column(server_default=True)
     created_at:Mapped[DATETIME] = mapped_column(DATETIME, server_default=func.now())
