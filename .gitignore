@@ -1,0 +1,4 @@
+/backend/tracking-app-env
+/backend/.env.*
+
+.env*
