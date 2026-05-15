@@ -1,16 +1,16 @@
 from datetime import timedelta
 from typing import Any, Annotated
-from fastapi import APIRouter, Body, Depends, HTTPException, status
+from fastapi import APIRouter,Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from jose import jwt, JWTError
 from pydantic import ValidationError
 from app.services.authService import AuthService
-from backend.app.schemas.token import Token
-from backend.app.core.config import get_settings
-from backend.app.schemas.user import User
+from backend.app.schemas import Token
+from app.core.config import get_settings
 from app.api.dependencies import get_auth_service
 from app.services.authService import AuthService
 from app.schemas.user.user import UserRequest
+
 settings = get_settings()
 # For demonstration purposes - in a real app, you'd use a database
 
@@ -47,7 +47,12 @@ async def login_for_access_token(service: get_auth_service_dependency,request: U
 
    return response
 
-   
+@router.post("/register")
+async def register_for_access_token():
+   """
+   Create a user and generate a jwt token
+   """
+   pass
 
 @router.get('/refresh',response_model=Token,tags=['auth'])
 async def refresh_token(refresh_token:str) -> Any:
@@ -101,6 +106,3 @@ async def refresh_token(refresh_token:str) -> Any:
       raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='Interal server error')
    
 
-@router.post("/register")
-async def register_for_access_token():
-   pass

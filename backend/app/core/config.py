@@ -1,23 +1,23 @@
 import os
 from pydantic_settings import BaseSettings, SettingsConfigDict
-import secrets
 from functools import lru_cache
 
 class Settings(BaseSettings):
-    environment:str = os.getenv('ENVIRONMENT','Development')
-    API_V1_STR: str = "/api/v1"
-    PROJECT_NAME: str = "FastAPI JWT Auth"
+    environment:str = os.getenv('ENVIRONMENT','development')
+    api_v1_str: str = "/api/v1"
+    project_name: str = "FastAPI JWT Auth"
     # Security settings
-    SECRET_KEY: str = secrets.token_urlsafe(32)
+    secret_key: str = os.getenv("SECRET_KEY","")
 
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
-    REFRESH_TOKEN_EXPIRE_DAYS: int = 7
+    access_token_expire_minutes: int = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES","")
+    refresh_token_expire_days: int = os.getenv("REFRESH_TOKEN_EXPIRE_DAYS","")
 
-    ALGORITHM: str = "HS256"
+    algorithm: str = os.getenv("ALGORITHM","")
     # Configuration for the model
     model_config = SettingsConfigDict(
         env_file=f".env.{environment}", 
-        env_file_encoding="utf-8"
+        env_file_encoding="utf-8",
+        case_sensitive=False
     )
     
 # @lru_cache(maxsize=32) // look into least recently used for caching and how it applies for pydantic settings

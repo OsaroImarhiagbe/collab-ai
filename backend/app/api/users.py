@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List
-from app.auth.jwt_bearer import get_current_user, get_current_user_with_roles
+# from app.auth.jwt_bearer import get_current_user, get_current_user_with_roles
+from app.api.dependencies import get_auth_service
 from app.schemas.user import User
 from backend.app.core.config import get_settings
 from backend.app.schemas.user import User
@@ -25,7 +26,7 @@ fake_users_db = {
     }
 }
 
-router = APIRouter(prefix="/users",tags=["users"])
+router = APIRouter(prefix=f"{settings.api_v1_str}/users",tags=["users"])
 
 @router.get("/me",response_model=User)
 async def get_user(current_user = Depends(get_current_user)):

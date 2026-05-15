@@ -1,6 +1,11 @@
 from pydantic import BaseModel, EmailStr, Field
 from typing import Optional, List
+from enum import Enum
 
+class Role(Enum):
+    ADMIN = 'admin'
+    USER = 'user'
+    GUEST = 'guest'
 
 class UserRequest(BaseModel):
     name:str

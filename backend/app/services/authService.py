@@ -1,17 +1,23 @@
 from typing import List,Optional, Dict, Any
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime,UTC
 from backend.app.core.config import get_settings
 from jose import jwt
 from passlib.context import CryptContext
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.schemas import Token, UserRequest
+from app.schemas import Token, UserRequest,Role
 from sqlalchemy import select
-from app.models.user.user import User
-from fastapi import HTTPException, status
+from app.models import User
+from fastapi import HTTPException, status, Depends
+from fastapi.security import OAuth2PasswordBearer
 settings = get_settings()
+
+
 
 class AuthService:
     """ Serivce handles the authentication and autherization within the backend application"""
+    
+
+    oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.api_v1_str}/auth/login")
 
     def __init__(self, db: AsyncSession, pwd_context=CryptContext(schemes=["bcrypt"])):
         self.pwd_context = pwd_context
@@ -20,6 +26,7 @@ class AuthService:
     
     async def login_user(self,request: UserRequest) -> Token:
         
+        ## Look into what would happened if query based of email( like if email has an index)
         result  = await self.db.execute(select(User.id,User.email,User.hased_password, User.is_active).where(User.email == request.email))
 
         user = result.scalar_one_or_none()
@@ -35,45 +42,56 @@ class AuthService:
                 status_code=status.HTTP_400_BAD_REQUEST, 
                 detail='Inactive user')
         
-        access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        ## if we have a user and user is a current active user (ex. not deleted account we will issue new access_token upon login)
+        if user and user.is_active:
+            access_token_expires = timedelta(minutes=settings.access_token_expire_minutes) #ex. 15 minutes
 
-        access_token = self.create_access_token(
-                subject=user["email"],
-                roles=user["roles"],
+            access_token = self.create_access_token(
+                subject=user.id,
+                email=user.email,
+                role=Role.USER,
+                is_active=user.is_active,
                 expires_delta=access_token_expires
             )
-        
-        refresh_token = self.create_refresh_token(subject=user["email"])
 
-        return {
-            "access_token": access_token,
-            "refresh_token": refresh_token,
-            "token_type": "bearer"
-        }
+            refresh_token = self.create_refresh_token(subject=user.id) # id coming from database
 
-    def create_access_token(self,subject: str, roles: List[str], expires_delta: Optional[timedelta] = None) -> str:
+            return {
+                "access_token": access_token,
+                "refresh_token": refresh_token,
+                "token_type": "bearer"
+            }
+
+    def create_access_token(self,subject: str,email:str,role:str,is_active:bool,expires_delta: Optional[timedelta] = None) -> str:
         """ Creates JWT Access Token"""
 
         if expires_delta:
             expire = datetime.now() + expires_delta
         else:
-            expire = datetime.now() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+            expire = datetime.now() + timedelta(minutes=settings.access_token_expire_minutes)
 
         to_encode = {
             "sub":str(subject),
+            "email":email,
+            "is_active":is_active,
+            "role":role,
             "exp":expire,
-            "iat":datetime.now(), # I think this is UTC
-            "roles":roles
+            "iat":datetime.now(UTC), # I think this is UTC
+            "token_type":"JWT"
         }
 
-        encode_jwt = jwt.encode(to_encode,settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+        ## Creating and Signing access token
+        encode_jwt = jwt.encode(
+            to_encode,
+            settings.secret_key, 
+            algorithm=settings.algorithm)
 
         return encode_jwt
     
     def create_refresh_token(self,subject:str) -> str:
         """ Create JWT refresh token"""
 
-        expire = datetime.now() + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
+        expire = datetime.now() + timedelta(days=settings.refresh_token_expire_days)
 
         to_encode = {
             "sub":str(subject),
@@ -82,12 +100,36 @@ class AuthService:
             "token_type":'refresh'
         }
 
-        encode_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+        encode_jwt = jwt.encode(
+            to_encode, 
+            settings.secret_key, 
+            algorithm=settings.algorithm)
 
         return encode_jwt
+
+
+    async def get_current_user(self,token) -> str:
+        """ Validate tokens and return username"""
+
+        try:
+   
+            payload = self.decode_token(token)
+            token_data = TokenPayload(**payload)
+            # Check for token expiration
+
+            if datetime.fromtimestamp(token_data.exp) < datetime.now():
+                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail='Token Expired',headers={"WWW-Authenticate": "Bearer"})
+            
+            return token_data.sub
+        except (JWTError, ValidationError):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Could not validate credentials",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
     
     def decode_token(self,token:str) -> Dict[str,Any]:
-        """ Decode JWT token"""
+        """ Decode JWT token to verify it"""
 
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
 
