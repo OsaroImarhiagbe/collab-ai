@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from pydantic import ValidationError
 from typing import Optional, List
-from app.schemas.token import TokenPayload
+from backend.app.modules.auth.schemas import TokenPayload
 from app.core.config import settings
 from app.auth.jwt_handler import decode_token
 from datetime import datetime

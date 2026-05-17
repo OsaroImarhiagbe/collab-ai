@@ -4,11 +4,11 @@ from fastapi import APIRouter,Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from jose import jwt, JWTError
 from pydantic import ValidationError
-from app.services import AuthService
-from backend.app.schemas import Token
+from app.modules.auth.service.authService import AuthService
+from app.modules.auth.schemas.token import Token
 from app.core.config import get_settings
-from app.api.dependencies import get_auth_service
-from app.schemas.user.user import UserRequest
+from backend.app.modules.auth.service.dependencies import get_auth_service
+from backend.app.modules.user.schemas.user import UserRequest
 
 settings = get_settings()
 # For demonstration purposes - in a real app, you'd use a database
@@ -38,13 +38,15 @@ fake_users_db = {
 router = APIRouter(prefix=f"{settings.API_V1_STR}/auth",tags=["auth"])
 
 @router.post('/login',response_model=Token,tags=['auth'])
-async def login_for_access_token(service: get_auth_service_dependency,request: UserRequest, form_data: OAuth2PasswordRequestForm = Depends()) -> Any:
+async def login_for_access_token(service: get_auth_service_dependency,request: UserRequest) -> Token:
    """
     OAuth2 compatible token login, returns an access token
     """
    response = await service.login_user(request)
 
    return response
+
+
 
 @router.post("/register")
 async def register_for_access_token():
