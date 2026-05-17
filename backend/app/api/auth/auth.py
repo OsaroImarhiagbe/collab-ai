@@ -4,11 +4,10 @@ from fastapi import APIRouter,Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from jose import jwt, JWTError
 from pydantic import ValidationError
-from app.services.authService import AuthService
+from app.services import AuthService
 from backend.app.schemas import Token
 from app.core.config import get_settings
 from app.api.dependencies import get_auth_service
-from app.services.authService import AuthService
 from app.schemas.user.user import UserRequest
 
 settings = get_settings()

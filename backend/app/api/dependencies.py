@@ -2,7 +2,7 @@ from app.db.dependecies import get_db
 from typing import Annotated
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import Depends, HTTPException, status
-from app.services.authService import AuthService
+from backend.app.services import AuthService
 
 get_database_dependency = Annotated[AsyncSession,Depends(get_db)]
 

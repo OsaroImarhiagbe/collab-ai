@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from app.core.config import settings
-from app.api import auth, users
+from backend.app.api.user import users
+from backend.app.api.auth import auth
 app = FastAPI(
     title=settings.PROJECT_NAME,
     openapi_url=f"{settings.API_V1_STR}/openapi.json"

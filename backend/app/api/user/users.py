@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from typing import List
+from typing import List, Annotated
 # from app.auth.jwt_bearer import get_current_user, get_current_user_with_roles
 from app.api.dependencies import get_auth_service
-from app.schemas.user import User
 from backend.app.core.config import get_settings
-from backend.app.schemas.user import User
+from app.schemas import User
+from backend.app.services import AuthService
+
 
 # pydantic settings
 settings = get_settings()
@@ -25,11 +26,12 @@ fake_users_db = {
         "is_active": True
     }
 }
+get_auth_service_dependency = Annotated[AuthService,Depends(get_auth_service)]
 
 router = APIRouter(prefix=f"{settings.api_v1_str}/users",tags=["users"])
 
 @router.get("/me",response_model=User)
-async def get_user(current_user = Depends(get_current_user)):
+async def get_user(service: get_auth_service_dependency,token:str = Depends(AuthService.oauth2_scheme), current_user = Depends(get_current_user)):
     """ Get Current user"""
 
     user = fake_users_db.get(current_user)

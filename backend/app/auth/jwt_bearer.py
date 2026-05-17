@@ -21,7 +21,10 @@ def get_current_user(token:str =Depends(oauth2_scheme)) -> str:
         # Check for token expiration
 
         if datetime.fromtimestamp(token_data.exp) < datetime.now():
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail='Token Expired',headers={"WWW-Authenticate": "Bearer"})
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail='Token Expired',
+                headers={"WWW-Authenticate": "Bearer"})
         
         return token_data.sub
     except (JWTError, ValidationError):
