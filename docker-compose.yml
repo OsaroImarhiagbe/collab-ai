@@ -46,6 +46,8 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/app
+    env_file:
+      - ./backend/.env.development
     restart: always
     depends_on:
       postgresql_db:

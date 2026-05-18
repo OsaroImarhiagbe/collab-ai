@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from typing import List, Annotated, Dict
-from app.services.dependencies import get_current_user
+from app.middleware.dependencies import get_current_user
 from backend.app.modules.user.service.dependencies import get_user_service
 from backend.app.core.config import get_settings
 from app.modules.user.schemas.user import User

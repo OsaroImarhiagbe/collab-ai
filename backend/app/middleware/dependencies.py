@@ -6,7 +6,7 @@ from app.modules.auth.schemas.auth import TokenPayload
 from fastapi import HTTPException, status, Depends
 from fastapi.security import OAuth2PasswordBearer
 from pydantic import ValidationError
-from app.services.jwt import decode_token
+from app.middleware.jwt import decode_token
 
 settings = get_settings()
 

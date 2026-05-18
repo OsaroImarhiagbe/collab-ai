@@ -8,7 +8,7 @@ from backend.app.modules.auth.schemas.auth import Token
 from app.core.config import get_settings
 from app.modules.auth.service.dependencies import get_auth_service
 from app.modules.auth.schemas.auth import LoginRequest, RegisterRequest, RefreshRequest
-from app.services.jwt import create_access_token,create_refresh_token
+from app.middleware.jwt import create_access_token,create_refresh_token
 
 settings = get_settings()
 

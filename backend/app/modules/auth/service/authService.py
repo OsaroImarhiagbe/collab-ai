@@ -6,7 +6,7 @@ from app.modules.auth.schemas.auth import LoginRequest, Token, Role, RegisterReq
 from sqlalchemy import select
 from app.modules.models import Auth_Credentials
 from fastapi import HTTPException, status
-from app.services.jwt import create_access_token, create_refresh_token
+from app.middleware.jwt import create_access_token, create_refresh_token
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 settings = get_settings()
