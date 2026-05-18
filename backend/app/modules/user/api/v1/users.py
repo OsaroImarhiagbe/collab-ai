@@ -1,42 +1,28 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List, Annotated
-# from app.auth.jwt_bearer import get_current_user, get_current_user_with_roles
-from backend.app.modules.auth.service.dependencies import get_auth_service
+from app.services.dependencies import get_current_user
+from backend.app.modules.user.service.dependencies import get_user_service
 from backend.app.core.config import get_settings
-from app.schemas import User
-from backend.app.services import AuthService
+from app.modules.user.schemas.user import UserRequest
+from app.modules.user.service.userService import UserService
 
-
+## To Do: Finish user logic connect to user service
 # pydantic settings
 settings = get_settings()
-# For demonstratio
-fake_users_db = {
-    "john@example.com": {
-        "id": 1,
-        "email": "john@example.com",
-        "full_name": "John Doe",
-        "roles": ["user"],
-        "is_active": True
-    },
-    "admin@example.com": {
-        "id": 2,
-        "email": "admin@example.com",
-        "full_name": "Admin User",
-        "roles": ["user", "admin"],
-        "is_active": True
-    }
-}
-get_auth_service_dependency = Annotated[AuthService,Depends(get_auth_service)]
+
+get_current_user_service_dependency = Annotated[str,Depends(get_current_user)]
+
+get_user_service_dependency = Annotated[UserService,Depends(get_user_service)]
 
 router = APIRouter(prefix=f"{settings.api_v1_str}/users",tags=["users"])
 
-@router.get("/me",response_model=User)
-async def get_user(auth_service: get_auth_service_dependency,token:str = Depends(AuthService.oauth2_scheme)):
+@router.get("/{user_id}",response_model=User)
+async def get_user(user_id:str,current_user: get_current_user_service_dependency,service:get_user_service_dependency):
     """ Get Current user"""
 
-    # user = fake_users_db.get(current_user)
+  
 
-    response = await service.get_current_user(token)
+    response = await service.get_user(user_id)
 
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='User not found')

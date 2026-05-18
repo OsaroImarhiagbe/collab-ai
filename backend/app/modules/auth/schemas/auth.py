@@ -1,9 +1,17 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import Optional, List
+from enum import Enum
 
-class Roles(BaseModel):
-    roles:str = 'Anon' | 'Authenticated'
-    
+class Role(Enum):
+    ADMIN = 'admin'
+    USER = 'user'
+    GUEST = 'guest'
+
+class AuthRequest(BaseModel):
+    name:str
+    email: EmailStr
+    password:str
+
 class Token(BaseModel):
     access_token: str
     refresh_token: str
@@ -16,4 +24,3 @@ class TokenPayload(BaseModel):
 
 class TokenData(BaseModel):
     username: Optional[str] = None
-    roles: Roles

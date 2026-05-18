@@ -8,9 +8,7 @@ class Role(Enum):
     GUEST = 'guest'
 
 class UserRequest(BaseModel):
-    name:str
-    email: EmailStr
-    password:str
+    user_id:str
 
 class UserCreate(BaseModel):
     password: str

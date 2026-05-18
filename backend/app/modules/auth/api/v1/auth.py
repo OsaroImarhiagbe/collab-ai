@@ -1,44 +1,26 @@
 from datetime import timedelta
 from typing import Any, Annotated
 from fastapi import APIRouter,Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
 from jose import jwt, JWTError
 from pydantic import ValidationError
 from app.modules.auth.service.authService import AuthService
-from app.modules.auth.schemas.token import Token
+from backend.app.modules.auth.schemas.auth import Token
 from app.core.config import get_settings
-from backend.app.modules.auth.service.dependencies import get_auth_service
-from backend.app.modules.user.schemas.user import UserRequest
+from app.modules.auth.service.dependencies import get_auth_service
+from app.modules.auth.schemas.auth import AuthRequest
 
 settings = get_settings()
-# For demonstration purposes - in a real app, you'd use a database
+
+# To Do: Finish out refresh token endpoint and register user endpoint
 
 
 get_auth_service_dependency = Annotated[AuthService, Depends(get_auth_service)]
 
-fake_users_db = {
-    "john@example.com": {
-        "id": 1,
-        "email": "john@example.com",
-        "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",  # "secret"
-        "full_name": "John Doe",
-        "roles": ["user"],
-        "is_active": True
-    },
-    "admin@example.com": {
-        "id": 2,
-        "email": "admin@example.com",
-        "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",  # "secret"
-        "full_name": "Admin User",
-        "roles": ["user", "admin"],
-        "is_active": True
-    }
-}
 
 router = APIRouter(prefix=f"{settings.API_V1_STR}/auth",tags=["auth"])
 
 @router.post('/login',response_model=Token,tags=['auth'])
-async def login_for_access_token(service: get_auth_service_dependency,request: UserRequest) -> Token:
+async def login_for_access_token(service: get_auth_service_dependency,request: AuthRequest) -> Token:
    """
     OAuth2 compatible token login, returns an access token
     """
