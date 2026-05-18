@@ -10,6 +10,9 @@ class Role(Enum):
 class UserRequest(BaseModel):
     user_id:str
 
+class User(BaseModel):
+    name:str
+
 class UserCreate(BaseModel):
     password: str
     full_name: Optional[str] = None
@@ -25,7 +28,7 @@ class UserInDB(BaseModel):
 
 class User(BaseModel):
     id: int
-    full_name: Optional[str] = None
-    roles: List[str] = ["user"]
+    name:str
+
     class Config:
         orm_mode = True

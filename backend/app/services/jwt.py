@@ -1,4 +1,4 @@
-from typing import List,Optional, Dict, Any
+from typing import Optional, Dict, Any
 from datetime import timedelta, datetime,UTC
 from backend.app.core.config import get_settings
 from jose import jwt,JWTError
