@@ -7,22 +7,59 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_PASSWORD: yourpassword
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
     volumes:
       - postgresql_db_data:/var/lib/postgresql/data
-
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    container_name: pgadmin
+    networks:
+      - app_network
+  
+  redis:
+    image: redis:7-alpine
+    container_name: redis
     restart: always
     ports:
-      - "8888:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@example.com
-      PGADMIN_DEFAULT_PASSWORD: yourpassword
+      - "6379:6379"
     volumes:
-      - pgadmin_data:/var/lib/pgadmin
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    networks:
+      - app_network
+  
+  backend:
+    image: python:3.12-slim
+    build: ./backend
+    container_name: fastapi-tracking-app-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    restart: always
+    depends_on:
+      postgresql_db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - app_network
+
 
 volumes:
   postgresql_db_data:
-  pgadmin_data:
+  redis_data:
+
+networks:
+  app_network:
+    driver: bridge

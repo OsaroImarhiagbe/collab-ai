@@ -1,15 +1,27 @@
 from pydantic import BaseModel, EmailStr
 from typing import Optional, List
 from enum import Enum
-
+from uuid import UUID
 class Role(Enum):
     ADMIN = 'admin'
     USER = 'user'
     GUEST = 'guest'
 
-class AuthRequest(BaseModel):
-    name:str
+class Verified(Enum):
+    verified = True
+    not_verified = False
+
+class RefreshRequest(BaseModel):
+    user_id:UUID
+
+class LoginRequest(BaseModel):
     email: EmailStr
+    password:str
+
+
+class RegisterRequest(BaseModel):
+    name:str
+    email:str
     password:str
 
 class Token(BaseModel):

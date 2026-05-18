@@ -1,12 +1,13 @@
 from datetime import timedelta
-from backend.app.core.config import get_settings
+from app.core.config import get_settings
 from passlib.context import CryptContext
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.modules.auth.schemas.auth import AuthRequest, Token, Role
+from app.modules.auth.schemas.auth import LoginRequest, Token, Role, RegisterRequest
 from sqlalchemy import select
 from app.modules.models import Auth_Credentials
 from fastapi import HTTPException, status
 from app.services.jwt import create_access_token, create_refresh_token
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 settings = get_settings()
 
@@ -20,64 +21,136 @@ class AuthService:
         self.db = db
 
     
-    async def login_user(self,request: AuthRequest) -> Token:
-        
+    async def login_user(self,request: LoginRequest) -> Token:
+        """
+        Service Layer
+        """
+        # we should probably sanitize the email input before we check the database
+
         # Query database for email and password
         user  = await self.verify_user_from_db(email=request.email)
 
 
         # verify password
         if not self._verify_password(request.password, user.hashed_password):
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail='Incorrect email or password',
-                headers={"WWW-Authenticate":"Bearer"}
-            )
+            raise ValueError("Incorrect email or password")
         
         if not user.is_verifed:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, 
-                detail='Inactive user')
+            raise PermissionError("Account is not verifed")
         
         ## if we have a user and user is a current active user (ex. not deleted account we will issue new access_token upon login)
-        if user and user.is_active:
-            access_token_expires = timedelta(minutes=settings.access_token_expire_minutes) #ex. 15 minutes
+        access_token_expires = timedelta(minutes=settings.access_token_expire_minutes) #ex. 15 minutes
 
-            # Signing and Createing access token
-            access_token = create_access_token(
-                subject=user.id,
-                email=user.email,
-                role=Role.USER,
-                is_active=user.is_active,
-                expires_delta=access_token_expires
-            )
-            # Creating refresh token
-            refresh_token = create_refresh_token(subject=user.id) # id coming from database
+        # Signing and Createing access token
+        access_token = create_access_token(
+            subject=user.id,
+            email=user.email,
+            role=user.role,
+            is_verified=user.is_verified,
+            expires_delta=access_token_expires
+        )
+        # Creating refresh token
+        refresh_token = create_refresh_token(subject=user.id) # id coming from database
 
-            return {
-                "access_token": access_token,
-                "refresh_token": refresh_token,
-                "token_type": "bearer"
-            } 
+        return {
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "token_type": "bearer"
+        }
+    
+    async def register_user(self,request:RegisterRequest) -> Token:
+        """
+        Service layer for user registration
+        """
+        # check to see email and name are valid strings type
+
+        if not request.email or not request.name:
+            raise ValueError("Invalid email or name")
+        
+        hashed_password = self.get_password(request.password)
+
+        user = await self.insert_user_into_db(request.email,hashed_password)
+
+    
+        access_token_expires = timedelta(minutes=settings.access_token_expire_minutes) #ex. 15 minutes
+
+        # Signing and Createing access token
+        access_token = create_access_token(
+            subject=user.user_id,
+            email=request.email,
+            role=user.role,
+            is_verified=user.is_verified,
+            expires_delta=access_token_expires
+        )
+        # Creating refresh token
+        refresh_token = create_refresh_token(subject=user.id) # id coming from database
+
+        return {
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "token_type": "bearer"
+        }
+
+    async def insert_user_into_db(self, email: str, hashed_password: str):
+        """
+        Data Layer
+
+        Function used to insert data into user_profiles table upon user creation.
+        Raises:
+            ValueError: if the email already exists
+            RuntimeError: if a database or unexpected error occurs
+        """
+        try:
+            # check if email already exisit in db before adding it to db
+            new_user = Auth_Credentials(email=email, hashed_password=hashed_password)
+            await self.db.add(new_user)
+            await self.db.commit()
+            await self.db.refresh(new_user)
+
+
+            # guard check all db-generated fields at once
+            if any(field is None for field in [new_user.user_id, new_user.created_at, new_user.updated_at,new_user.role, new_user.is_verified]):
+                raise RuntimeError("User was inserted but one or more DB-generated fields were not returned")
+                        
+            return new_user
+        
+
+        except IntegrityError as e:
+            await self.db.rollback()
+            print(f"Duplicate email attempted: {email} | {e}")
+            raise ValueError(f"A user with email '{email}' already exists.") from e
+
+        except SQLAlchemyError as e:
+            await self.db.rollback()
+            print(f"Database error during user creation: {e}")
+            raise RuntimeError("Failed to insert user due to a database error.") from e
+
+        except Exception as e:
+            await self.db.rollback()
+            print(f"Unexpected error during user creation: {e}")
+            raise RuntimeError("An unexpected error occurred during user creation.") from e
+
+
     async def verify_user_from_db(self,email:str):
-        """ function will check auth_credentials table for user"""
+        """ 
+        Data Layer
+        function will check auth_credentials table for user"""
 
         ## Look into what would happened if query based of email( like if email has an index)
         response = await self.db.execute(select(
              Auth_Credentials.id,
              Auth_Credentials.email,
              Auth_Credentials.hashed_password,
-             Auth_Credentials.is_verified)
+             Auth_Credentials.is_verified,
+             Auth_Credentials.role
+             )
              .where(Auth_Credentials.email == email))
         
-        if not response:
-            print('user not found authService')
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="User not found"
-            )
-        
+     
         user = response.scalar_one_or_none()
+
+        if user is None:
+            raise LookupError(f"User with email '{email}' not found")
 
         return user
 

@@ -28,7 +28,9 @@ class UserService:
     #     pass
 
     async def get_user_from_db(self,current_user:Dict[str,Any]):
-
+        """
+        Function purpose is to query the database for a user based of an id
+        """
         if not current_user["sub"]:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,

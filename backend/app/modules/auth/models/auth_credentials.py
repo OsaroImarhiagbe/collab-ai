@@ -4,9 +4,10 @@ from sqlalchemy import (
     BOOLEAN,
     func, 
     DATETIME)
-from backend.app.modules.models.base import Base
+from app.modules.models.base import Base
 import uuid
 from uuid import UUID
+from app.modules.auth.schemas.auth import Role, Verified
 
 
 class Auth_Credentials(Base):
@@ -19,7 +20,9 @@ class Auth_Credentials(Base):
 
     hashed_password:Mapped[str] = mapped_column(String(100),unique=True,nullable=False)
 
-    is_verified:Mapped[BOOLEAN] = mapped_column(server_default=True)
+    is_verified:Mapped[BOOLEAN] = mapped_column(server_default=Verified.verified,nullable=False)
+
+    role:Mapped[str] = mapped_column(String(10),server_default=Role.USER,nullable=False)
     
     created_at:Mapped[DATETIME] = mapped_column(DATETIME, server_default=func.now())
     updated_at:Mapped[DATETIME] = mapped_column(DATETIME,server_onupdate=func.now())
