@@ -7,7 +7,7 @@ from jose import jwt,JWTError
 settings = get_settings()
 
 
-def create_access_token(subject: str,email:str,role:str,is_active:bool,expires_delta: Optional[timedelta] = None) -> str:
+def create_access_token(subject: str,email:str,role:str,is_verified:bool,expires_delta: Optional[timedelta] = None) -> str:
     """ Creates JWT Access Token"""
 
     if expires_delta:
@@ -17,19 +17,18 @@ def create_access_token(subject: str,email:str,role:str,is_active:bool,expires_d
 
     to_encode = {
         "sub":str(subject),
-        "email":email,
-        "is_active":is_active,
+        "is_verified":is_verified,
         "role":role,
         "exp":expire,
         "iat":datetime.now(UTC), # I think this is UTC
-        "token_type":"JWT"
+        "token_type":"jwt"
     }
 
     ## Creating and Signing access token
     encode_jwt = jwt.encode(
         to_encode,
         settings.secret_key, 
-        algorithm=settings.algorithm)
+        algorithm=[settings.algorithm])
 
     return encode_jwt
 
@@ -48,7 +47,8 @@ def create_refresh_token(subject:str) -> str:
     encode_jwt = jwt.encode(
         to_encode, 
         settings.secret_key, 
-        algorithm=settings.algorithm)
+        algorithm=[settings.algorithm]
+    )
 
     return encode_jwt
     
@@ -58,6 +58,10 @@ def decode_token(token:str) -> Dict[str,Any]:
 
     try:
         payload = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
+
+        if not payload:
+            raise ValueError("Invalid token!")
+        
         return payload
     except JWTError:
         return None

@@ -1,18 +1,28 @@
 import os
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from functools import lru_cache
+from pydantic import SecretStr
 
 class Settings(BaseSettings):
-    environment:str = os.getenv('ENVIRONMENT','development')
+    environment:str 
     api_v1_str: str = "/api/v1"
     project_name: str = "FastAPI JWT Auth"
+
     # Security settings
-    secret_key: str = os.getenv("SECRET_KEY","")
+    secret_key: SecretStr
 
-    access_token_expire_minutes: int = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES","")
-    refresh_token_expire_days: int = os.getenv("REFRESH_TOKEN_EXPIRE_DAYS","")
+    # jwt access + refresh token
+    access_token_expire_minutes: int
+    refresh_token_expire_days: int
 
-    algorithm: str = os.getenv("ALGORITHM","")
+    algorithm: str
+
+    # Redia
+    redis_host:str
+    redis_db:int
+    redis_port:int
+    redis_password:str
+    
+
     # Configuration for the model
     model_config = SettingsConfigDict(
         env_file=f".env.{environment}", 
@@ -20,7 +30,11 @@ class Settings(BaseSettings):
         case_sensitive=False
     )
     
-# @lru_cache(maxsize=32) // look into least recently used for caching and how it applies for pydantic settings
-def get_settings():
-    """ Return the settings class to be used within the backend application"""
-    return Settings()
+
+
+try:
+    settings = Settings()
+    print("Environment settings are available!")
+except Exception as e:
+    print(f'Booting environment error:{e}')
+    exit(1) # what does this do?

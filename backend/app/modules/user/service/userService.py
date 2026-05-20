@@ -15,7 +15,7 @@ class UserService:
         self.db = db
 
     async def get_user(self,current_user:Dict[str,Any]) -> User:
-        user = await self.get_user_from_db(current_user)
+        user = await self._get_user_from_db(current_user)
 
         if not user:
             raise HTTPException(
@@ -27,7 +27,7 @@ class UserService:
     # async def get_all_users_from_db():
     #     pass
 
-    async def get_user_from_db(self,current_user:Dict[str,Any]):
+    async def _get_user_from_db(self,current_user:Dict[str,Any]):
         """
         Function purpose is to query the database for a user based of an id
         """

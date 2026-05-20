@@ -1,4 +1,4 @@
-from backend.app.infrastructure.db.session import AsyncSessionLocal
+from app.infrastructure.db.session import AsyncSessionLocal
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import AsyncGenerator
 
@@ -26,4 +26,3 @@ async def get_db():
             raise
         finally:
             await session.close()
-            raise

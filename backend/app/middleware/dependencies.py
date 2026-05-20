@@ -13,36 +13,38 @@ settings = get_settings()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.api_v1_str}/auth/login")
 
 ## this function will be our token validation function
-async def get_current_user(self,token:str = Depends(oauth2_scheme)) -> str:
+async def get_current_user():
     """ Validate tokens and return username"""
+    def _inner(token:str = Depends(oauth2_scheme)):
+        try:
 
-    try:
+            payload = decode_token(token)
 
-        payload = decode_token(token)
-
-        # if invalid token
-        if not payload:
+            # if invalid token
+            if not payload:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Invalid token",
+                    headers={"WWW-Authenticate": "Bearer"}
+                )
+            
+            # Check for token expiration
+            if datetime.fromtimestamp(payload.exp) < datetime.now():
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail='Token Expired',
+                    headers={"WWW-Authenticate": "Bearer"}
+                )
+            
+            return payload
+        except (JWTError, ValidationError):
             raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid token",
-                headers={"WWW-Authenticate": "Bearer"}
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Could not validate credentials",
+                headers={"WWW-Authenticate": "Bearer"},
             )
         
-        # Check for token expiration
-        if datetime.fromtimestamp(payload.exp) < datetime.now():
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail='Token Expired',
-                headers={"WWW-Authenticate": "Bearer"}
-            )
-        
-        return payload
-    except (JWTError, ValidationError):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Could not validate credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+    return _inner
 
 def get_current_user_with_roles(required_roles:Optional[List[str]] = None) -> callable:
     """
@@ -50,7 +52,7 @@ def get_current_user_with_roles(required_roles:Optional[List[str]] = None) -> ca
     """
     if required_roles is None:
         required_roles = []
-    
+    ## privatr function
     def _inner(token: str = Depends(oauth2_scheme)) -> str:
         try:
             payload = decode_token(token)

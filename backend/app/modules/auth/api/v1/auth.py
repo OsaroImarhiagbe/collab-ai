@@ -5,12 +5,12 @@ from jose import jwt, JWTError
 from pydantic import ValidationError
 from app.modules.auth.service.authService import AuthService
 from backend.app.modules.auth.schemas.auth import Token
-from app.core.config import get_settings
+from app.core.config import settings
 from app.modules.auth.service.dependencies import get_auth_service
 from app.modules.auth.schemas.auth import LoginRequest, RegisterRequest, RefreshRequest
 from app.middleware.jwt import create_access_token,create_refresh_token
 
-settings = get_settings()
+
 
 # To Do: Finish out refresh token endpoint and register user endpoint
 
@@ -34,7 +34,7 @@ async def login_for_access_token(service: get_auth_service_dependency,request: L
          httponly=True, # Prevents client-side JS from accessing the cookie
          secure=True, # Set to True in production with HTTPS  # Recommended: Only send cookie over HTTPS
          samesite="lax", # Default browser behavior; restricts cross-site sending
-         max_age=60 * 60 * 24 * settings.REFRESH_TOKEN_EXPIRE_DAYS  # in seconds
+         max_age=60 * 60 * 24 * settings.refresh_token_expire_days # in seconds
 
       )
       return results
@@ -74,7 +74,7 @@ async def register_for_access_token(request:RegisterRequest,service:get_auth_ser
          httponly=True,
          secure=True, # Set to True in production with HTTPS
          samesite="lax",
-         max_age=60 * 60 * 24 * settings.REFRESH_TOKEN_EXPIRE_DAYS  # in seconds
+         max_age=60 * 60 * 24 * settings.refresh_token_expire_days  # in seconds
 
       )
    except ValueError as e:
@@ -85,7 +85,7 @@ async def register_for_access_token(request:RegisterRequest,service:get_auth_ser
    except RuntimeError as e:
       raise HTTPException(
          status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-         detail="Internal Server Erroi"
+         detail="Internal Server Error"
          )
 
 
