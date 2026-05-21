@@ -1,5 +1,5 @@
 import './App.css'
-import Login from './pages/auth/Login'
+import Login from './pages/auth/login'
 import Register from './pages/auth/register';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 function App() {

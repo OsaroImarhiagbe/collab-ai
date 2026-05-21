@@ -24,6 +24,7 @@ class RegisterRequest(BaseModel):
     email:str
     password:str
 
+# Take a look at the resposne model going back to the client
 class Token(BaseModel):
     access_token: str
     refresh_token: str

@@ -15,10 +15,23 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Link } from "react-router-dom"
-export function LoginForm({
+import { memo } from "react"
+
+function LoginForm({
   className,
+    login,
+    handleEmail,
+    handlePassword,
+    email,
+    password,
   ...props
-}: React.ComponentProps<"div">) {
+}: React.ComponentProps<"div"> & {
+  email:string,
+  password:string,
+  handleEmail:(val:string) => void,
+  handlePassword:(val:string) => void,
+  login: (email:string,password:string) => void
+}) {
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -36,6 +49,8 @@ export function LoginForm({
                 <Input
                   id="email"
                   type="email"
+                  value={email}
+                  onChange={(e) => handleEmail(e.target.value)}
                   placeholder="m@example.com"
                   required
                 />
@@ -50,10 +65,15 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => handlePassword(e.target.value)}
+                required />
               </Field>
               <Field>
-                <Button type="submit">Login</Button>
+                <Button type="submit" onClick={() => login(email,password)}>Login</Button>
                 <Button variant="outline" type="button">
                   Login with Google
                 </Button>
@@ -68,3 +88,4 @@ export function LoginForm({
     </div>
   )
 }
+export default memo(LoginForm)

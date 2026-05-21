@@ -18,7 +18,7 @@ from app.middleware.jwt import create_access_token,create_refresh_token
 get_auth_service_dependency = Annotated[AuthService, Depends(get_auth_service)]
 
 
-router = APIRouter(prefix=f"{settings.API_V1_STR}/auth",tags=["auth"])
+router = APIRouter(prefix=f"{settings.api_v1_str}/auth",tags=["auth"])
 
 @router.post('/login',response_model=Token,tags=['auth'])
 async def login_for_access_token(service: get_auth_service_dependency,request: LoginRequest,response:Response) -> Token:
