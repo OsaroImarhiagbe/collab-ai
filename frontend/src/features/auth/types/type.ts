@@ -15,7 +15,7 @@ type Authentication = {
 
 export type Login = Pick<Authentication, "email" | "password">
 
-export type Register = Pick<Authentication, "email" | "password" | 'name'>
+export type RegisterType = Pick<Authentication, "email" | "password" | 'name'>
 
 export type AuthContextType = {
     handleLogin: (email:string,password:string) => void
