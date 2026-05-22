@@ -1,9 +1,10 @@
 import {  useMemo, useCallback, type PropsWithChildren, useState} from "react";
-import type { AuthContextType,AuthUser} from "@/features/auth/types/type";
+import type { AuthContextType,AuthUser, LoginSchema, RegisterSchema} from "@/features/auth/types/type";
 import { useLogin, useRegister } from "@/features/auth/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "./authContext";
 
+import { registerSchema,loginSchema } from "@/features/auth/types/type";
 export const AuthContextProvider = ({children}:PropsWithChildren) => {
     const navigate = useNavigate()
     const [ authenticated, setAuthenticated ] = useState<AuthUser>({
@@ -11,28 +12,40 @@ export const AuthContextProvider = ({children}:PropsWithChildren) => {
         authenticated:false
     })
    
-    const { mutateAsync:loginAsync } = useLogin()
-    const { mutateAsync:registerAsync } = useRegister()
+    const { mutateAsync:loginAsync, isPending:loginPending } = useLogin()
+    const { mutateAsync:registerAsync, isPending:registerPending } = useRegister()
 
-    // //navigation hook
+    
     
 
 
     
 
 
-    const handleRegister = useCallback(async (name:string,email:string,password:string) => {
+    const handleRegister = useCallback(async (registerForm:RegisterSchema) => {
+
+        const result = registerSchema.safeParse(registerForm);
+        if (!result.success) {
+            console.log(result.error.message);
+            return
+        }
+
         await registerAsync({
-            name:name,
-            email:email,
-            password:password
+            name:registerForm.name,
+            email:registerForm.email,
+            password:registerForm.password
         })
     },[registerAsync])
 
-    const handleLogin = useCallback(async (email:string,password:string) => {
+    const handleLogin = useCallback(async (loginForm:LoginSchema) => {
+        const result = loginSchema.safeParse(loginForm)
+        if (!result.success) {
+            console.log(result.error.message);
+            return
+        }
         const repsonse = await loginAsync({
-            email:email,
-            password:password
+            email:loginForm.email,
+            password:loginForm.password
         })
 
         if(repsonse.status === 200 ){
@@ -46,10 +59,14 @@ export const AuthContextProvider = ({children}:PropsWithChildren) => {
 
     const value = useMemo<AuthContextType>(() => ({
         authenticated,
+        loginPending,
+        registerPending,
         handleLogin,
         handleRegister,
     }),[
         authenticated,
+        loginPending,
+        registerPending,
         handleLogin,
         handleRegister,
     ])

@@ -16,10 +16,12 @@ import {
 import { Input } from "@/components/ui/input"
 import { Link } from "react-router-dom"
 import { memo } from "react"
+import { Spinner } from "@/components/ui/spinner"
 
 function LoginForm({
   className,
     login,
+    loading,
     handleEmail,
     handlePassword,
     email,
@@ -28,6 +30,7 @@ function LoginForm({
 }: React.ComponentProps<"div"> & {
   email:string,
   password:string,
+  loading:boolean,
   handleEmail:(val:string) => void,
   handlePassword:(val:string) => void,
   login: (email:string,password:string) => void
@@ -73,7 +76,9 @@ function LoginForm({
                 required />
               </Field>
               <Field>
-                <Button type="submit" onClick={() => login(email,password)}>Login</Button>
+                <Button type="submit" onClick={() => login(email,password)}>
+                 {loading ? <Spinner/> : null }
+                  {loading ? 'Logging In...' : 'Login'}</Button>
                 <Button variant="outline" type="button">
                   Login with Google
                 </Button>

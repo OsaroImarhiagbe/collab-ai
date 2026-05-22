@@ -12,7 +12,6 @@ function App() {
 
   console.log('Auth:',authenticated)
 
-  const auth = true
 
   return (
    
@@ -23,7 +22,7 @@ function App() {
 
 
       {/* Wrap protected routes */}
-    <Route element={<ProtectedRoute isAuthenticated={auth}/>}>
+    <Route element={<ProtectedRoute isAuthenticated={authenticated.authenticated}/>}>
       <Route path="/" element={<WorkSpaceLayout/>}>
       {/* 1. Default screen when visiting /dashboard */}
       <Route index element={<Task/>} />

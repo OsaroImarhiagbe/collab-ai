@@ -1,16 +1,17 @@
 import  SignupForm  from "@/features/auth/components/signup-form";
 import { useState } from "react";
 import { useAuth } from "@/context/auth/authContext";
-import type { RegisterType } from "@/features/auth/types/type";
+import {type RegisterSchema } from "@/features/auth/types/type"; 
 const Register = () => {
     
-    const [ registerForm, setRegisterForm ] = useState<RegisterType>({
+    const [ registerForm, setRegisterForm ] = useState<RegisterSchema>({
             name:'',
             email:'',
             password:'',
+            confirmPassword:''
         })
     
-    const { handleRegister } = useAuth()
+    const { registerPending,handleRegister } = useAuth()
     
     return (
         <main className="flex min-h-dvh flex-col items-center justify-center">
@@ -22,7 +23,8 @@ const Register = () => {
                     handleEmail={(val:string) => setRegisterForm((prev) => ({...prev, email:val}))}
                     handlePassword={(val:string) => setRegisterForm((prev) => ({...prev, password:val}))}
                     handleName={(val:string) => setRegisterForm((prev) => ({...prev, name:val}))}
-                    register={handleRegister}
+                    loading={registerPending}
+                    register={() => handleRegister(registerForm)}
                     />
             </section>
         </main>

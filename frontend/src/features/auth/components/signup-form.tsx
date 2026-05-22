@@ -15,10 +15,12 @@ import {
 import { Input } from "@/components/ui/input"
 import { Link } from "react-router-dom"
 import { memo } from 'react'
+import { Spinner } from "@/components/ui/spinner"
 
 function SignupForm({
   email,
   name,
+  loading,
   password,
   handleEmail,
   handlePassword,
@@ -30,6 +32,7 @@ function SignupForm({
     email:string,
     name:string,
     password:string,
+    loading:boolean,
     handleEmail:(val:string) => void,
     handlePassword: (val:string) => void,
     handleName: (val:string) => void,
@@ -86,7 +89,9 @@ function SignupForm({
             </Field>
             <FieldGroup>
               <Field>
-                <Button type="submit" onClick={() => register(name,email,password)}>Create Account</Button>
+                <Button type="submit" onClick={() => register(name,email,password)}>
+                  {loading ? <Spinner/> : null }
+                 {loading ? 'Creating....' : 'Create Account'}</Button>
                 <Button variant="outline" type="button">
                   Sign up with Google
                 </Button>
