@@ -2,7 +2,7 @@ import { useBoard } from "@/features/workspace/hooks/useBoard"
 import { BoardHeader } from "@/features/workspace/components/board-header"
 import { BoardColumn } from "@/features/workspace/components/border-column"
 
-export default function BoardView() {
+export function BoardView() {
   const {
     columns,
     totalTasks,
@@ -13,17 +13,15 @@ export default function BoardView() {
     onDragOver,
     onDragLeave,
     onDrop,
-  } = useBoard();
+  } = useBoard()
 
   return (
-    <div className="flex flex-col h-screen bg-background">
+    <div className="flex flex-col h-full">
       <BoardHeader
         totalTasks={totalTasks}
         search={search}
         onSearchChange={setSearch}
       />
-
-      {/* Board */}
       <div className="flex gap-3 p-4 overflow-x-auto flex-1 items-start">
         {columns.map((col) => (
           <BoardColumn
@@ -38,5 +36,5 @@ export default function BoardView() {
         ))}
       </div>
     </div>
-  );
+  )
 }

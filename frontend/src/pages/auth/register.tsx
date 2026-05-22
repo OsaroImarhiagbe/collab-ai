@@ -1,6 +1,6 @@
 import  SignupForm  from "@/features/auth/components/signup-form";
 import { useState } from "react";
-import { useAuth } from "@/context/authContext";
+import { useAuth } from "@/context/auth/authContext";
 import type { RegisterType } from "@/features/auth/types/type";
 const Register = () => {
     

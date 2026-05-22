@@ -1,20 +1,37 @@
 import './App.css'
-// import Login from './pages/auth/login'
-// import Register from './pages/auth/register';
-import BoardView from './pages/board';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Login from './pages/auth/login'
+import Register from './pages/auth/register';
+import WorkSpaceLayout from './pages/layout/workspacelayout';
+import Task from './pages/task/task';
+import ProtectedRoute from './pages/protectedroutes';
+import { Routes, Route } from 'react-router-dom';
+import { useAuth } from './context/auth/authContext';
 function App() {
 
+  const { authenticated } = useAuth()
+
+  console.log('Auth:',authenticated)
+
+  const auth = true
+
   return (
-    <BrowserRouter>
+   
     <Routes>
       {/* Public Routes */}
-      {/* <Route path='/login' element={<Login/>}/>
-      <Route path='/register' element={<Register/>}/> */}
-      {/* Private routes */}
-       <Route path='/' element={<BoardView/>}/>
+      <Route path='/login' element={<Login/>}/>
+      <Route path='/register' element={<Register/>}/>
+
+
+      {/* Wrap protected routes */}
+    <Route element={<ProtectedRoute isAuthenticated={auth}/>}>
+      <Route path="/" element={<WorkSpaceLayout/>}>
+      {/* 1. Default screen when visiting /dashboard */}
+      <Route index element={<Task/>} />
+
+        {/* 2. Other sub-screens */}
+      </Route>
+    </Route>
     </Routes>
-    </BrowserRouter>
   )
 }
 

@@ -1,5 +1,5 @@
 import LoginForm  from "@/features/auth/components/login-form";
-import { useAuth } from "@/context/authContext";
+import { useAuth } from "@/context/auth/authContext";
 import { useState } from "react";
 import type { Login } from "@/features/auth/types/type";
 

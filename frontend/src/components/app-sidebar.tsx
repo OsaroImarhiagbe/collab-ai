@@ -4,198 +4,142 @@ import * as React from "react"
 
 import { NavMain } from "@/components/nav-main"
 import { NavProjects } from "@/components/nav-projects"
-import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
+import { TeamSwitcher } from "@/components/team-switcher"
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
+  SidebarRail,
 } from "@/components/ui/sidebar"
-import { TerminalSquareIcon, BotIcon, BookOpenIcon, Settings2Icon, LifeBuoyIcon, SendIcon, FrameIcon, PieChartIcon, MapIcon, TerminalIcon } from "lucide-react"
+import {
+  LayoutDashboardIcon,
+  KanbanIcon,
+  ListTodoIcon,
+  CalendarDaysIcon,
+  UsersIcon,
+  Settings2Icon,
+  FolderKanbanIcon,
+  RocketIcon,
+  BriefcaseIcon,
+} from "lucide-react"
 
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    name: "Alex Kim",
+    email: "alex@acme.com",
+    avatar: "/avatars/alex.jpg",
   },
+  teams: [
+    {
+      name: "Acme Inc",
+      logo: <BriefcaseIcon />,
+      plan: "Enterprise",
+    },
+    {
+      name: "Side Project",
+      logo: <RocketIcon />,
+      plan: "Free",
+    },
+  ],
   navMain: [
     {
-      title: "Playground",
+      title: "Overview",
       url: "#",
-      icon: (
-        <TerminalSquareIcon
-        />
-      ),
+      icon: <LayoutDashboardIcon />,
       isActive: true,
       items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
+        { title: "Dashboard",  url: "#" },
+        { title: "My Tasks",   url: "#" },
+        { title: "Assigned",   url: "#" },
       ],
     },
     {
-      title: "Models",
+      title: "Board",
       url: "#",
-      icon: (
-        <BotIcon
-        />
-      ),
+      icon: <KanbanIcon />,
       items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
+        { title: "Sprint 14",  url: "#" },
+        { title: "Backlog",    url: "#" },
+        { title: "Roadmap",    url: "#" },
       ],
     },
     {
-      title: "Documentation",
+      title: "Tasks",
       url: "#",
-      icon: (
-        <BookOpenIcon
-        />
-      ),
+      icon: <ListTodoIcon />,
       items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
+        { title: "All Tasks",   url: "/board" },
+        { title: "In Progress", url: "#" },
+        { title: "Completed",   url: "#" },
+      ],
+    },
+    {
+      title: "Calendar",
+      url: "#",
+      icon: <CalendarDaysIcon />,
+      items: [
+        { title: "Month View",  url: "#" },
+        { title: "Week View",   url: "#" },
+        { title: "Deadlines",   url: "#" },
+      ],
+    },
+    {
+      title: "Members",
+      url: "#",
+      icon: <UsersIcon />,
+      items: [
+        { title: "Team",        url: "#" },
+        { title: "Workload",    url: "#" },
+        { title: "Invite",      url: "#" },
       ],
     },
     {
       title: "Settings",
       url: "#",
-      icon: (
-        <Settings2Icon
-        />
-      ),
+      icon: <Settings2Icon />,
       items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
+        { title: "General",     url: "#" },
+        { title: "Workspace",   url: "#" },
+        { title: "Billing",     url: "#" },
+        { title: "Notifications", url: "#" },
       ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Support",
-      url: "#",
-      icon: (
-        <LifeBuoyIcon
-        />
-      ),
-    },
-    {
-      title: "Feedback",
-      url: "#",
-      icon: (
-        <SendIcon
-        />
-      ),
     },
   ],
   projects: [
     {
-      name: "Design Engineering",
+      name: "Product — Sprint 14",
       url: "#",
-      icon: (
-        <FrameIcon
-        />
-      ),
+      icon: <FolderKanbanIcon />,
     },
     {
-      name: "Sales & Marketing",
+      name: "Marketing Campaign",
       url: "#",
-      icon: (
-        <PieChartIcon
-        />
-      ),
+      icon: <BriefcaseIcon />,
     },
     {
-      name: "Travel",
+      name: "Platform Infra",
       url: "#",
-      icon: (
-        <MapIcon
-        />
-      ),
+      icon: <RocketIcon />,
     },
   ],
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar variant="inset" {...props}>
+    <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
-              <a href="#">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <TerminalIcon className="size-4" />
-                </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">Acme Inc</span>
-                  <span className="truncate text-xs">Enterprise</span>
-                </div>
-              </a>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
         <NavProjects projects={data.projects} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   )
 }
