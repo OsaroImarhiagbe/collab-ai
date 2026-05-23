@@ -2,7 +2,7 @@ from datetime import timedelta
 from app.core.config import get_settings
 from passlib.context import CryptContext
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.modules.auth.schemas.auth import LoginRequest, Token, Role, RegisterRequest
+from app.modules.auth.schemas.auth import LoginRequest, TokenResponse, Role, RegisterRequest, Token, UserAuthenticationData
 from sqlalchemy import select
 from app.modules.models import Auth_Credentials
 from fastapi import HTTPException, status
@@ -21,14 +21,16 @@ class AuthService:
         self.db = db
 
     
-    async def login_user(self,request: LoginRequest) -> Token:
+    async def login_user(self,request: LoginRequest) -> TokenResponse:
         """
-        Service Layer
+        Service Layer function to check user credentials against the database
         """
         # we should probably sanitize the email input before we check the database
+        if not request.email:
+            raise ValueError("Incorrect email")
 
         # Query database for email and password
-        user  = await self.verify_user_from_db(email=request.email)
+        user  = await self._verify_user_from_db(email=request.email)
 
 
         # verify password
@@ -44,21 +46,27 @@ class AuthService:
         # Signing and Createing access token
         access_token = create_access_token(
             subject=user.id,
-            email=user.email,
             role=user.role,
-            is_verified=user.is_verified,
+            is_authenticated=user.is_authenticated,
             expires_delta=access_token_expires
         )
         # Creating refresh token
         refresh_token = create_refresh_token(subject=user.id) # id coming from database
 
-        return {
-            "access_token": access_token,
-            "refresh_token": refresh_token,
-            "token_type": "bearer"
-        }
+        return TokenResponse(
+            status=status.HTTP_200_OK,
+            error="",
+            data=Token(
+                access_token=access_token,
+                refresh_token=refresh_token,
+                user= UserAuthenticationData(
+                    user_id=user.user_id,
+                    authenticated=user.is_authenticated
+                )
+            )
+            )
     
-    async def register_user(self,request:RegisterRequest) -> Token:
+    async def register_user(self,request:RegisterRequest) -> TokenResponse:
         """
         Service layer for user registration
         """
@@ -67,7 +75,7 @@ class AuthService:
         if not request.email or not request.name:
             raise ValueError("Invalid email or name")
         
-        hashed_password = self.get_password(request.password)
+        hashed_password = self._get_password(request.password)
 
         user = await self.insert_user_into_db(request.email,hashed_password)
 
@@ -77,19 +85,26 @@ class AuthService:
         # Signing and Createing access token
         access_token = create_access_token(
             subject=user.user_id,
-            email=request.email,
             role=user.role,
-            is_verified=user.is_verified,
+            is_verified=user.is_authenticated,
             expires_delta=access_token_expires
         )
         # Creating refresh token
         refresh_token = create_refresh_token(subject=user.id) # id coming from database
 
-        return {
-            "access_token": access_token,
-            "refresh_token": refresh_token,
-            "token_type": "bearer"
-        }
+        return TokenResponse(
+            status=status.HTTP_200_OK,
+            error="",
+            data=Token(
+                access_token=access_token,
+                refresh_token=refresh_token,
+                user= UserAuthenticationData(
+                    user_id=user.user_id,
+                    authenticated=user.is_authenticated
+                )
+            )
+            )
+    
 
     async def insert_user_into_db(self, email: str, hashed_password: str):
         """
@@ -131,7 +146,7 @@ class AuthService:
             raise RuntimeError("An unexpected error occurred during user creation.") from e
 
 
-    async def verify_user_from_db(self,email:str):
+    async def _verify_user_from_db(self,email:str):
         """ 
         Data Layer
         function will check auth_credentials table for user"""
@@ -141,7 +156,7 @@ class AuthService:
              Auth_Credentials.id,
              Auth_Credentials.email,
              Auth_Credentials.hashed_password,
-             Auth_Credentials.is_verified,
+             Auth_Credentials.is_authenticated,
              Auth_Credentials.role
              )
              .where(Auth_Credentials.email == email))
@@ -159,5 +174,5 @@ class AuthService:
         return self.pwd_context.verify(plain_password, hash_password)
     
 
-    def get_password(self,password:str) -> str:
+    def _get_password(self,password:str) -> str:
         return self.pwd_context.hash(password)

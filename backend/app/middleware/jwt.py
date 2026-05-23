@@ -7,7 +7,7 @@ from jose import jwt,JWTError
 settings = get_settings()
 
 
-def create_access_token(subject: str,email:str,role:str,is_verified:bool,expires_delta: Optional[timedelta] = None) -> str:
+def create_access_token(subject: str,role:str,is_authenticated:bool,expires_delta: Optional[timedelta] = None) -> str:
     """ Creates JWT Access Token"""
 
     if expires_delta:
@@ -17,11 +17,11 @@ def create_access_token(subject: str,email:str,role:str,is_verified:bool,expires
 
     to_encode = {
         "sub":str(subject),
-        "is_verified":is_verified,
+        "is_authenticated":is_authenticated,
         "role":role,
         "exp":expire,
         "iat":datetime.now(UTC), # I think this is UTC
-        "token_type":"jwt"
+        "token_type": "JWT"
     }
 
     ## Creating and Signing access token

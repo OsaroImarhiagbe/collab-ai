@@ -37,12 +37,12 @@ export const loginSchema = z.object({
 export type RegisterSchema = z.infer<typeof registerSchema>;
 export type LoginSchema = z.infer<typeof loginSchema>;
 
-type Authentication = {
-    email:string
-    password:string
-    comfirmPassword:string
-    name:string
-}
+// type Authentication = {
+//     email:string
+//     password:string
+//     comfirmPassword:string
+//     name:string
+// }
 export type AuthUser = {
     user_id:string | undefined
     authenticated:false | undefined
@@ -55,7 +55,7 @@ export type AuthResponse = {
 
 
 
-export type Login = Pick<Authentication, "email" | "password">
+
 
 
 export type AuthContextType = {

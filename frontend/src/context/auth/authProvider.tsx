@@ -16,11 +16,6 @@ export const AuthContextProvider = ({children}:PropsWithChildren) => {
     const { mutateAsync:registerAsync, isPending:registerPending } = useRegister()
 
     
-    
-
-
-    
-
 
     const handleRegister = useCallback(async (registerForm:RegisterSchema) => {
 
@@ -30,12 +25,19 @@ export const AuthContextProvider = ({children}:PropsWithChildren) => {
             return
         }
 
-        await registerAsync({
+        const response = await registerAsync({
             name:registerForm.name,
             email:registerForm.email,
             password:registerForm.password
         })
-    },[registerAsync])
+        if(response.status === 200 ){
+            setAuthenticated({
+                user_id:response?.data.user.user_id,
+                authenticated:response?.data.user.authenticated
+            })
+            navigate('/')
+        }
+    },[registerAsync,navigate])
 
     const handleLogin = useCallback(async (loginForm:LoginSchema) => {
         const result = loginSchema.safeParse(loginForm)
@@ -43,15 +45,15 @@ export const AuthContextProvider = ({children}:PropsWithChildren) => {
             console.log(result.error.message);
             return
         }
-        const repsonse = await loginAsync({
+        const response = await loginAsync({
             email:loginForm.email,
             password:loginForm.password
         })
 
-        if(repsonse.status === 200 ){
+        if(response.status === 200 ){
             setAuthenticated({
-                user_id:repsonse?.data.user.user_id,
-                authenticated:repsonse?.data.user.authenticated
+                user_id:response?.data.user.user_id,
+                authenticated:response?.data.user.authenticated
             })
             navigate('/')
         }

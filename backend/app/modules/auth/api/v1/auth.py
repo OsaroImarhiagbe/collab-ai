@@ -4,7 +4,7 @@ from fastapi import APIRouter,Depends, HTTPException, status, Response, Request
 from jose import jwt, JWTError
 from pydantic import ValidationError
 from app.modules.auth.service.authService import AuthService
-from backend.app.modules.auth.schemas.auth import Token
+from backend.app.modules.auth.schemas.auth import TokenResponse
 from app.core.config import settings
 from app.modules.auth.service.dependencies import get_auth_service
 from app.modules.auth.schemas.auth import LoginRequest, RegisterRequest, RefreshRequest
@@ -20,8 +20,8 @@ get_auth_service_dependency = Annotated[AuthService, Depends(get_auth_service)]
 
 router = APIRouter(prefix=f"{settings.api_v1_str}/auth",tags=["auth"])
 
-@router.post('/login',response_model=Token,tags=['auth'])
-async def login_for_access_token(service: get_auth_service_dependency,request: LoginRequest,response:Response) -> Token:
+@router.post('/login',response_model=TokenResponse,tags=['auth'])
+async def login_for_access_token(service: get_auth_service_dependency,request: LoginRequest,response:Response) -> TokenResponse:
    """
     OAuth2 compatible token login, returns an access token
     """
@@ -39,9 +39,10 @@ async def login_for_access_token(service: get_auth_service_dependency,request: L
       )
       return results
    except LookupError as e:
-      raise HTTPException(
-         status_code=status.HTTP_404_NOT_FOUND,
-         detail=str(e)
+      return TokenResponse(
+         status=status.HTTP_404_NOT_FOUND,
+         error=str(e),
+         data=None
       )
    except ValueError as e:
       raise HTTPException(
@@ -61,8 +62,8 @@ async def login_for_access_token(service: get_auth_service_dependency,request: L
 
 
 
-@router.post("/register",response_model=Token, tags=["auth"])
-async def register_for_access_token(request:RegisterRequest,service:get_auth_service_dependency,response:Response) -> Token:
+@router.post("/register",response_model=TokenResponse, tags=["auth"])
+async def register_for_access_token(request:RegisterRequest,service:get_auth_service_dependency,response:Response) -> TokenResponse:
    """
    Create a user and generate a jwt token
    """
@@ -89,7 +90,7 @@ async def register_for_access_token(request:RegisterRequest,service:get_auth_ser
          )
 
 
-@router.get('/refresh',response_model=Token,tags=['auth'])
+@router.get('/refresh',response_model=TokenResponse,tags=['auth'])
 async def refresh_token(refresh:RefreshRequest,request:Request,response:Response,current) -> Any:
 
    """ Refresh Token Endpoint"""

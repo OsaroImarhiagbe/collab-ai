@@ -20,7 +20,7 @@ class Auth_Credentials(Base):
 
     hashed_password:Mapped[str] = mapped_column(String(100),unique=True,nullable=False)
 
-    is_verified:Mapped[BOOLEAN] = mapped_column(server_default=Verified.verified,nullable=False)
+    is_authenticated:Mapped[BOOLEAN] = mapped_column(server_default=Verified.verified,nullable=False)
 
     role:Mapped[str] = mapped_column(String(10),server_default=Role.USER,nullable=False)
     
