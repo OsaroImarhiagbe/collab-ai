@@ -6,6 +6,7 @@ import { AuthContext } from "./authContext";
 
 import { registerSchema,loginSchema } from "@/features/auth/types/type";
 export const AuthContextProvider = ({children}:PropsWithChildren) => {
+    
     const navigate = useNavigate()
     const [ authenticated, setAuthenticated ] = useState<AuthUser>({
         user_id:'',

@@ -59,6 +59,24 @@ services:
         condition: service_healthy
     networks:
       - app_network
+      
+  frontend:
+    image: node:20-alpine
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: tracking-app-frontend
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./frontend:/app
+    env_file:
+      - ./frontend/.env.development
+    restart: always
+    depends_on:
+      - backend
+    networks:
+      - app_network
 
 
 volumes:
