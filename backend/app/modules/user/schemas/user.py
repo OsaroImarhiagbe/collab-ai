@@ -23,12 +23,12 @@ class UserInDB(BaseModel):
     full_name: Optional[str] = None
     roles: List[str] = ["user"]
 
-    class Config:
-        orm_mode = True
+    # class Config:
+    #     orm_mode = True
 
 class User(BaseModel):
     id: int
     name:str
 
-    class Config:
-        orm_mode = True
+    # class Config:
+    #     orm_mode = True

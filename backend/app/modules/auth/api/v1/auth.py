@@ -4,7 +4,7 @@ from fastapi import APIRouter,Depends, HTTPException, status, Response, Request
 from jose import jwt, JWTError
 from pydantic import ValidationError
 from app.modules.auth.service.authService import AuthService
-from backend.app.modules.auth.schemas.auth import TokenResponse
+from app.modules.auth.schemas.auth import TokenResponse
 from app.core.config import settings
 from app.modules.auth.service.dependencies import get_auth_service
 from app.modules.auth.schemas.auth import LoginRequest, RegisterRequest, RefreshRequest

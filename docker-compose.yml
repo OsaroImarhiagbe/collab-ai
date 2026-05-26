@@ -1,21 +1,20 @@
-version: "3.9"
 services:
   postgresql_db:
-    image: postgres:18-alpine
+    image: postgres:17-alpine
     container_name: postgresql-db
     restart: always
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
-      interval: 1m30s
-      timeout: 30s
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
       retries: 5
-      start_period: 30s
+      start_period: 10s
     volumes:
       - postgresql_db_data:/var/lib/postgresql/data
     networks:
@@ -31,20 +30,19 @@ services:
     volumes:
       - redis_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli","-a","${yourpassword}", "PING"]
-      interval: 1s
-      timeout: 3s
+      test: ["CMD", "redis-cli","-a","${REDIS_PASSWORD}", "PING"]
+      interval: 10s
+      timeout: 5s
       retries: 5
-      start_period: 30s
+      start_period: 10s
     networks:
       - app_network
   
   backend:
-    image: python:3.12-slim
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: fastapi-tracking-app-backend
+    container_name: tracking-app-backend
     ports:
       - "8000:8000"
     volumes:
@@ -57,11 +55,16 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
     networks:
       - app_network
       
   frontend:
-    image: node:20-alpine
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -70,8 +73,11 @@ services:
       - "8080:8080"
     volumes:
       - ./frontend:/app
+      - /app/node_modules
     env_file:
       - ./frontend/.env.development
+    environment:
+      - CI=true
     restart: always
     depends_on:
       - backend

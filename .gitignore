@@ -1,4 +1,8 @@
 /backend/tracking-app-env
 /backend/.env.*
+/frontend/.env.*
+/backend/*/__pycache__/
+__pycache__/
 
+/frontend/.pnpm-store
 .env*

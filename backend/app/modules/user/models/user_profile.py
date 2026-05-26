@@ -5,7 +5,7 @@ from sqlalchemy import (
     func,
     ForeignKey,
     DATETIME)
-from backend.app.modules.models.base import Base
+from app.modules.models.base import Base
 import uuid
 from uuid import UUID
 
@@ -14,7 +14,7 @@ class User_Profile(Base):
 
     __tablename__ = "user_profile"
 
-    id:Mapped[UUID] = mapped_column(primary_key=True, index=True,unique=True,server_default=uuid.uuid4()) # this is using v4 uuid
+    id:Mapped[UUID] = mapped_column(primary_key=True, index=True,unique=True,server_default=func.gen_random_uuid())# this is using v4 uuid
 
     user_id:Mapped[UUID] = mapped_column(ForeignKey('auth_credentials.id'),nullable=False)
 

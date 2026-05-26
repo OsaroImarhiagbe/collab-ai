@@ -1,20 +1,18 @@
 # ── 2. Database Engine + Session Factory (db/session.py) ──────────────────────
- 
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
     async_sessionmaker,
     create_async_engine,
 )
-from sqlalchemy.orm import DeclarativeBase
 
-from app.core.config import get_settings
 
-settings = get_settings()
+from app.core.config import settings
+
  
 # The engine manages the connection pool.
 # One engine per application — create it once at module level.
 engine = create_async_engine(
-    settings.DATABASE_URL,
+    settings.database_url,
     # Logs all SQL statements when True — great for debugging, off in prod
     echo=False,
     # Ping connections before handing them out of the pool.

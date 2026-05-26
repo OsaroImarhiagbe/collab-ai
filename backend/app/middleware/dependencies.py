@@ -1,6 +1,6 @@
 from typing import List,Optional
 from datetime import datetime
-from backend.app.core.config import get_settings
+from app.core.config import settings
 from jose import JWTError
 from app.modules.auth.schemas.auth import TokenPayload
 from fastapi import HTTPException, status, Depends
@@ -8,7 +8,7 @@ from fastapi.security import OAuth2PasswordBearer
 from pydantic import ValidationError
 from app.middleware.jwt import decode_token
 
-settings = get_settings()
+
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.api_v1_str}/auth/login")
 

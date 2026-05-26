@@ -1,9 +1,8 @@
-import os
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import SecretStr
 
 class Settings(BaseSettings):
-    environment:str 
+    environment:str = "development"
     api_v1_str: str = "/api/v1"
     project_name: str = "FastAPI JWT Auth"
 
@@ -21,6 +20,18 @@ class Settings(BaseSettings):
     redis_db:int
     redis_port:int
     redis_password:str
+
+    #postgres db
+    postgresql_port: int = 5432
+    postgres_user: str
+    postgres_password: str
+    postgres_db: str
+
+    # Alembic Database url
+    database_url_sync:str
+    
+    # FastAPI Database url
+    database_url:str
     
 
     # Configuration for the model

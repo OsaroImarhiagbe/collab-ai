@@ -1,4 +1,4 @@
-from backend.app.infrastructure.db.dependecies import get_db
+from app.infrastructure.db.dependecies import get_db
 from typing import Annotated
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import Depends, HTTPException, status

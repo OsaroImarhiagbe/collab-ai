@@ -1,10 +1,8 @@
 from typing import Optional, Dict, Any
 from datetime import timedelta, datetime,UTC
-from backend.app.core.config import get_settings
+from app.core.config import settings
 from jose import jwt,JWTError
 
-
-settings = get_settings()
 
 
 def create_access_token(subject: str,role:str,is_authenticated:bool,expires_delta: Optional[timedelta] = None) -> str:
