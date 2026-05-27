@@ -1,14 +1,9 @@
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import (
-    String,
-    BOOLEAN,
-    func, 
-    DATETIME)
+from sqlalchemy import func,String,Boolean, DateTime
 from app.modules.models.base import Base
-import uuid
 from uuid import UUID
 from app.modules.auth.schemas.auth import Role, Verified
-
+from datetime import datetime
 
 class Auth_Credentials(Base):
 
@@ -20,9 +15,9 @@ class Auth_Credentials(Base):
 
     hashed_password:Mapped[str] = mapped_column(String(100),unique=True,nullable=False)
 
-    is_authenticated:Mapped[bool] = mapped_column(BOOLEAN,server_default=str(Verified.authenticated.value).lower(),nullable=False)
+    is_authenticated:Mapped[bool] = mapped_column(Boolean,server_default=str(Verified.authenticated.value).lower(),nullable=False)
 
     role:Mapped[str] = mapped_column(String(10),server_default=str(Role.USER.value),nullable=False)
     
-    created_at:Mapped[DATETIME] = mapped_column(DATETIME, server_default=func.now())
-    updated_at:Mapped[DATETIME] = mapped_column(DATETIME,server_onupdate=func.now())
+    created_at:Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    updated_at:Mapped[datetime] = mapped_column(DateTime(timezone=True),server_onupdate=func.now())
