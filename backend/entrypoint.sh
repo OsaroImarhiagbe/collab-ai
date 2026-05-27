@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
+echo "Waiting for database"
+
 echo "Running Alembic migrations..."
 alembic upgrade head
 
