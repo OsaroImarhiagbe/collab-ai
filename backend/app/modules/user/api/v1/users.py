@@ -14,7 +14,7 @@ get_current_user_service_dependency = Annotated[Dict,Depends(get_current_user)]
 
 get_user_service_dependency = Annotated[UserService,Depends(get_user_service)]
 
-router = APIRouter(prefix=f"{settings.api_v1_str}/users",tags=["users"])
+router = APIRouter(tags=["users"])
 
 @router.get("/me",response_model=User)
 async def get_user(current_user: get_current_user_service_dependency,service:get_user_service_dependency) -> User:

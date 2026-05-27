@@ -4,7 +4,7 @@ from pydantic import SecretStr
 class Settings(BaseSettings):
     environment:str = "development"
     api_v1_str: str = "/api/v1"
-    project_name: str = "FastAPI JWT Auth"
+    project_name: str = "NextTask API"
 
     # Security settings
     secret_key: SecretStr
