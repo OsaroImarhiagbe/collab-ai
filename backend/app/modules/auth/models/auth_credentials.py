@@ -9,15 +9,53 @@ class Auth_Credentials(Base):
 
     __tablename__ = "auth_credentials"
 
-    user_id:Mapped[UUID] = mapped_column(primary_key=True, index=True,unique=True,server_default=func.gen_random_uuid()) ## this is using v4 uuid
+    user_id:Mapped[UUID] = mapped_column(
+        primary_key=True, 
+        index=True,
+        unique=True,
+        server_default=func.uuid7(monotonic=True),
+        doc="Auth ID",
+        comment="Id of the user") ## this is using v4 uuid
 
-    email:Mapped[str] = mapped_column(String(30),unique=True,nullable=False)
+    email:Mapped[str] = mapped_column(
+        String(30),unique=True,
+        nullable=False,
+        doc="Email",
+        comment="The email of the user")
 
-    hashed_password:Mapped[str] = mapped_column(String(100),unique=True,nullable=False)
+    hashed_password:Mapped[str] = mapped_column(
+        String(100),unique=True,
+        nullable=False,
+        doc="Password",
+        comment="User's password")
 
-    is_authenticated:Mapped[bool] = mapped_column(Boolean,server_default=str(Verified.authenticated.value).lower(),nullable=False)
+    # Look at this tomorrow this might be is email verified
+    is_authenticated:Mapped[bool] = mapped_column(
+        Boolean,
+        server_default=Verified.authenticated.value,
+        nullable=False)
 
-    role:Mapped[str] = mapped_column(String(10),server_default=str(Role.USER.value),nullable=False)
+    role:Mapped[str] = mapped_column(
+        String(10),
+        server_default=Role.USER.value,
+        nullable=False,
+        doc="Role",
+        comment="The role of the user")
     
-    created_at:Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
-    updated_at:Mapped[datetime] = mapped_column(DateTime(timezone=True),server_onupdate=func.now())
+    created_at:Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), 
+        server_default=func.now(),
+        doc="Create At",
+        comment="When the user was first created")
+
+    updated_at:Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_onupdate=func.now(),
+        doc="Updated At",
+        comment="When the user was updated")
+
+    last_login:Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_onupdate=func.now(),
+        doc="Last Login",
+        comment="User's last login attempt")
