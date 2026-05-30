@@ -5,4 +5,7 @@
 __pycache__/
 
 /frontend/.pnpm-store
+
+
+secrets/
 .env*

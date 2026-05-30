@@ -35,7 +35,6 @@ class UserAuthenticationData(BaseModel):
 
 class Token(BaseModel):
     access_token: str
-    refresh_token: str
     user:UserAuthenticationData
 # Take a look at the resposne model going back to the client
 class TokenResponse(BaseModel):

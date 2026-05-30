@@ -12,7 +12,7 @@ from app.core.config import settings
 # The engine manages the connection pool.
 # One engine per application — create it once at module level.
 engine = create_async_engine(
-    settings.database_url,
+    settings.fastapi_database_url(),
     # Logs all SQL statements when True — great for debugging, off in prod
     echo=False,
     # Ping connections before handing them out of the pool.

@@ -14,9 +14,10 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 class AuthService:
     """ Serivce handles the authentication and autherization within the backend application"""
     
-    def __init__(self, db: AsyncSession, pwd_context=CryptContext(schemes=["bcrypt"])):
+    def __init__(self, db: AsyncSession, pwd_context=CryptContext(schemes=["bcrypt"]),token=settings.access_token_expire_minutes):
         self.pwd_context = pwd_context
         self.db = db
+        self.__token_expire_minutes = token
 
     
     async def login_user(self,request: LoginRequest) -> TokenResponse:
@@ -39,7 +40,7 @@ class AuthService:
             raise PermissionError("Account is not verifed")
         
         ## if we have a user and user is a current active user (ex. not deleted account we will issue new access_token upon login)
-        access_token_expires = timedelta(minutes=settings.access_token_expire_minutes) #ex. 15 minutes
+        access_token_expires = timedelta(minutes=self.__token_expire_minutes) #ex. 15 minutes
 
         # Signing and Createing access token
         access_token = create_access_token(

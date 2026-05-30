@@ -1,8 +1,8 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import SecretStr
-
+import os
 class Settings(BaseSettings):
-    environment:str = "development"
+    environment:str = os.getenv("ENVIRONMENT","development")
     api_v1_str: str = "/api/v1"
     project_name: str = "NextTask API"
 
@@ -13,25 +13,29 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int
     refresh_token_expire_days: int
 
-    algorithm: str
+    # Algorithm secret or not???
+    algorithm:SecretStr
 
     # Redia
     redis_host:str
     redis_db:int
     redis_port:int
-    redis_password:str
+    redis_password:SecretStr
 
     #postgres db
-    postgresql_port: int = 5432
-    postgres_user: str
-    postgres_password: str
-    postgres_db: str
+    postgresql_port:int
+    alembic_postgres_user: str
+    fastapi_postgres_user:str
+    postgres_password: SecretStr
+    postgres_db:str
 
     # Alembic Database url
-    database_url_sync:str
+    def alembic_database_url_sync(self) -> str:
+        return f"postgresql+psycopg2://{self.alembic_postgres_user}:{self.postgres_password}@postgresql-db:{self.postgresql_port}/{self.postgres_db}"
     
     # FastAPI Database url
-    database_url:str
+    def fastapi_database_url(self) -> str:
+        return f"postgresql+asyncpg://{self.fastapi_postgres_user}:{self.postgres_password}@postgresql-db:{self.postgresql_port}/{self.postgres_db}"
     
 
     # Configuration for the model
@@ -45,7 +49,7 @@ class Settings(BaseSettings):
 
 try:
     settings = Settings()
-    print("Environment settings are available!")
+    print("Environment settings are available! ")
 except Exception as e:
     print(f'Booting environment error:{e}')
     exit(1) # what does this do?
