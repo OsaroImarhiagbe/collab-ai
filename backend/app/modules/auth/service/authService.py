@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.modules.auth.schemas.auth import LoginRequest, TokenResponse, Role, RegisterRequest, Token, UserAuthenticationData
 from sqlalchemy import select
 from app.modules.models import Auth_Credentials
-from fastapi import HTTPException, status
+from fastapi import status
 from app.middleware.jwt import create_access_token, create_refresh_token
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
@@ -16,7 +16,7 @@ class AuthService:
     
     def __init__(self, db: AsyncSession, pwd_context=CryptContext(schemes=["bcrypt"]),token=settings.access_token_expire_minutes):
         self.pwd_context = pwd_context
-        self.db = db
+        self.__db = db
         self.__token_expire_minutes = token
 
     
@@ -46,7 +46,7 @@ class AuthService:
         access_token = create_access_token(
             subject=user.id,
             role=user.role,
-            is_authenticated=user.is_authenticated,
+            email_verified=user.is_authenticated,
             expires_delta=access_token_expires
         )
         # Creating refresh token
@@ -85,7 +85,7 @@ class AuthService:
         access_token = create_access_token(
             subject=user.user_id,
             role=user.role,
-            is_verified=user.is_authenticated,
+            email_verified=user.email_verified,
             expires_delta=access_token_expires
         )
         # Creating refresh token
@@ -105,7 +105,7 @@ class AuthService:
             )
     
 
-    async def insert_user_into_db(self, email: str, hashed_password: str):
+    async def _insert_user_into_db(self, email: str, hashed_password: str):
         """
         Data Layer
 
@@ -117,9 +117,9 @@ class AuthService:
         try:
             # check if email already exisit in db before adding it to db
             new_user = Auth_Credentials(email=email, hashed_password=hashed_password)
-            await self.db.add(new_user)
-            await self.db.commit()
-            await self.db.refresh(new_user)
+            await self.__db.add(new_user)
+            await self.__db.commit()
+            await self.__db.refresh(new_user)
 
 
             # guard check all db-generated fields at once
@@ -151,11 +151,11 @@ class AuthService:
         function will check auth_credentials table for user"""
 
         ## Look into what would happened if query based of email( like if email has an index)
-        response = await self.db.execute(select(
+        response = await self.__db.execute(select(
              Auth_Credentials.id,
              Auth_Credentials.email,
              Auth_Credentials.hashed_password,
-             Auth_Credentials.is_authenticated,
+             Auth_Credentials.emial_verified,
              Auth_Credentials.role
              )
              .where(Auth_Credentials.email == email))

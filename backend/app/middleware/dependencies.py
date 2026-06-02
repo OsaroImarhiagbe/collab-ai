@@ -27,7 +27,6 @@ async def get_current_user():
                     detail="Invalid token",
                     headers={"WWW-Authenticate": "Bearer"}
                 )
-            
             # Check for token expiration
             if datetime.fromtimestamp(payload.exp) < datetime.now():
                 raise HTTPException(

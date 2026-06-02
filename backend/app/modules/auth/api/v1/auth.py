@@ -8,9 +8,9 @@ from app.modules.auth.schemas.auth import TokenResponse
 from app.core.config import settings
 from app.modules.auth.service.dependencies import get_auth_service
 from app.modules.auth.schemas.auth import LoginRequest, RegisterRequest, RefreshRequest
-from app.middleware.jwt import create_access_token,create_refresh_token
-
-
+from app.middleware.jwt import create_access_token,decode_token
+from datetime import datetime
+from app.infrastructure.redis.dependencies import verify_token_not_revoked
 
 # To Do: Finish out refresh token endpoint and register user endpoint
 
@@ -30,7 +30,7 @@ async def login_for_access_token(service: get_auth_service_dependency,request: L
       results = await service.login_user(request)
       response.set_cookie(
          key="refresh_token",
-         value=results.refresh_token,
+         value=results.data.refresh_token,
          httponly=True, # Prevents client-side JS from accessing the cookie
          secure=True, # Set to True in production with HTTPS  # Recommended: Only send cookie over HTTPS
          samesite="lax", # Default browser behavior; restricts cross-site sending
@@ -91,27 +91,56 @@ async def register_for_access_token(request:RegisterRequest,service:get_auth_ser
 
 
 @router.get('/refresh',response_model=TokenResponse,tags=['auth'])
-async def refresh_token(refresh:RefreshRequest,request:Request,response:Response,current) -> Any:
+async def refresh_token(refresh:RefreshRequest,request:Request,response:Response) -> Any:
 
    """ Refresh Token Endpoint"""
 
    try:
       # extract refresh token from httponly cookie
       refresh_token = request.cookies.get("refresh_token")
-
+      # if not refresh token in cookies return 401 error
       if not refresh_token:
          raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail='No refresh token!'
+            detail='Invalid refresh token'
             )
-   
       
+      # verify token signature
+      token_verified = decode_token(refresh_token)
+      if not token_verified:
+         raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid signature",
+            headers={"WWW-Authenticate": "Bearer"}
+         )
       
-      access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+       # Check for token expiration
+      if datetime.fromtimestamp(token_verified.exp) < datetime.now():
+            raise HTTPException(
+               status_code=status.HTTP_401_UNAUTHORIZED,
+               detail='Token Expired',
+               headers={"WWW-Authenticate": "Bearer"}
+            )
+      
+      # check redis cache if the token was blacklist or revoked
+      token_revoked = verify_token_not_revoked(token_verified)
+      if token_revoked:
+         raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail='Token has been revoked',
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
-      access_token = create_access_token(subject=email,roles=user['roles'], expires_delta=access_token_expires)
+      # if token has not been revoked we will issue a new access and refresh token
+      access_token_expires = timedelta(minutes=settings.access_token_expire_minutes)
+      # generate the access token
+      access_token = create_access_token(
+         subject=refresh.user_id,
+         roles= refresh.roles,
+         
+         expires_delta=access_token_expires)
 
-      new_refresh_token = refresh_token(subject=email)
+      new_refresh_token = refresh_token(subject=refresh.user_id)
       return {
          "access_token":access_token,
          "refresh_token":new_refresh_token,
@@ -124,18 +153,18 @@ async def refresh_token(refresh:RefreshRequest,request:Request,response:Response
          headers={"WWW-Authenticate": "Bearer"})
    
    except Exception as e:
-      print(f'Error at Login endpoint: {e}') ## Could add logging here
+      print(f'Error at refersh endpoint: {e}') ## Could add logging here
       raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='Interal server error')
    
 
-# @router.post('/logout', tags=['auth'])
-# async def logout(response: Response):
-#     response.delete_cookie(
-#         key="refresh_token",
-#         httponly=True,
-#         secure=True,
-#         samesite="lax"
-#     )
-#     return {"message": "Successfully logged out"}
+@router.post('/logout', tags=['auth'])
+async def logout(response: Response):
+    response.delete_cookie(
+        key="refresh_token",
+        httponly=True,
+        secure=True,
+        samesite="lax"
+    )
+    return {"message": "Successfully logged out"}
    
 

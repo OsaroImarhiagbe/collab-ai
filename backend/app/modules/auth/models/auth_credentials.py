@@ -2,7 +2,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import func,String,Boolean, DateTime
 from app.modules.models.base import Base
 from uuid import UUID
-from app.modules.auth.schemas.auth import Role, Verified
+from app.modules.auth.schemas.auth import Role, Email_Verified
 from datetime import datetime
 
 class Auth_Credentials(Base):
@@ -29,10 +29,9 @@ class Auth_Credentials(Base):
         doc="Password",
         comment="User's password")
 
-    # Look at this tomorrow this might be is email verified
-    is_authenticated:Mapped[bool] = mapped_column(
+    emial_verified:Mapped[bool] = mapped_column(
         Boolean,
-        server_default=Verified.authenticated.value,
+        server_default= Email_Verified.not_verified.value,
         nullable=False)
 
     role:Mapped[str] = mapped_column(

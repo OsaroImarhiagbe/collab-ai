@@ -9,14 +9,15 @@ class Role(Enum):
     USER = 'user'
     GUEST = 'guest'
 
-# User Authentication Value
-class Verified(Enum):
-    authenticated = True
-    not_authenticated = False
+# User Email verification Value
+class Email_Verified(Enum):
+    is_verified = True
+    not_verified = False
 
 # Auth Request Object
 class RefreshRequest(BaseModel):
     user_id:UUID
+    roles:str
 
 class LoginRequest(BaseModel):
     email: EmailStr
@@ -35,8 +36,9 @@ class UserAuthenticationData(BaseModel):
 
 class Token(BaseModel):
     access_token: str
+    refresh_token:str
     user:UserAuthenticationData
-# Take a look at the resposne model going back to the client
+
 class TokenResponse(BaseModel):
     status:int
     error:Optional[str] = None
@@ -49,3 +51,7 @@ class TokenPayload(BaseModel):
 
 class TokenData(BaseModel):
     username: Optional[str] = None
+
+
+class RefreshTokenRespone(BaseModel):
+    access_token:str

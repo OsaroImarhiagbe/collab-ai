@@ -10,7 +10,7 @@ def revoke_token(token:str,expires_in:int) -> None:
 
 def is_token_revoked(token:str) -> bool:
     """
-    Check if token is in blacklist
+    Check if token is in blacklist; will return true for is revoked or false for not revoked
     """
 
     return bool(redis_client.get(f"revoked:{token}"))
@@ -18,8 +18,4 @@ def is_token_revoked(token:str) -> bool:
 # checking if refresh token has been revoked since, access token is short lived
 def verify_token_not_revoked(token:str) -> None:
     if is_token_revoked(token):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail='Token has been revoked',
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise LookupError('token is revoked or blacklisted')
