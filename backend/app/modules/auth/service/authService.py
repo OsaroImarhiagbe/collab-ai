@@ -76,7 +76,7 @@ class AuthService:
         
         hashed_password = self._get_password(request.password)
 
-        user = await self.insert_user_into_db(request.email,hashed_password)
+        user = await self._insert_user_into_db(request.email,hashed_password)
 
     
         access_token_expires = timedelta(minutes=settings.access_token_expire_minutes) #ex. 15 minutes

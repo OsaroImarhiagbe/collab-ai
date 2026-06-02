@@ -18,6 +18,8 @@ class Email_Verified(Enum):
 class RefreshRequest(BaseModel):
     user_id:UUID
     roles:str
+class RefreshResponse(BaseModel):
+    access_token:str
 
 class LoginRequest(BaseModel):
     email: EmailStr

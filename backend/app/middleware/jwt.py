@@ -2,24 +2,24 @@ from typing import Optional, Dict, Any
 from datetime import timedelta, datetime,UTC
 from app.core.config import settings
 from jose import jwt,JWTError
+from uuid import uuid4
 
 
-
-def create_access_token(subject: str,role:str,is_authenticated:bool,expires_delta: Optional[timedelta] = None) -> str:
+def create_access_token(subject: str,role:str,email_verified:bool,expires_delta: Optional[timedelta] = None) -> str:
     """ Creates JWT Access Token"""
 
     if expires_delta:
-        expire = datetime.now() + expires_delta
+        expire = datetime.now(UTC) + expires_delta
     else:
-        expire = datetime.now() + timedelta(minutes=settings.access_token_expire_minutes)
+        expire = datetime.now(UTC) + timedelta(minutes=settings.access_token_expire_minutes)
 
     to_encode = {
         "sub":str(subject),
-        "is_authenticated":is_authenticated,
+        "email_verified":email_verified,
+        "iss":"https://yourdomain.com", # We will figure out how to add the iss later
         "role":role,
+        "iat":datetime.now(UTC),
         "exp":expire,
-        "iat":datetime.now(UTC), # I think this is UTC
-        "token_type": "JWT"
     }
 
     ## Creating and Signing access token
@@ -37,9 +37,11 @@ def create_refresh_token(subject:str) -> str:
 
     to_encode = {
         "sub":str(subject),
+        "ver":1,
+        "jti":uuid4(),
+        "iss":"https://yourdomain.com",
+        "iat":datetime.now(UTC),
         "exp":expire,
-        "iat":datetime.now(),
-        "token_type":'refresh'
     }
 
     encode_jwt = jwt.encode(

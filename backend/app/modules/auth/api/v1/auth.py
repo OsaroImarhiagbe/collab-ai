@@ -4,13 +4,22 @@ from fastapi import APIRouter,Depends, HTTPException, status, Response, Request
 from jose import jwt, JWTError
 from pydantic import ValidationError
 from app.modules.auth.service.authService import AuthService
-from app.modules.auth.schemas.auth import TokenResponse
+from app.modules.auth.schemas.auth import (
+   TokenResponse, 
+   RefreshResponse, 
+   LoginRequest, 
+   RegisterRequest, 
+   RefreshRequest)
 from app.core.config import settings
 from app.modules.auth.service.dependencies import get_auth_service
-from app.modules.auth.schemas.auth import LoginRequest, RegisterRequest, RefreshRequest
 from app.middleware.jwt import create_access_token,decode_token
-from datetime import datetime
-from app.infrastructure.redis.dependencies import verify_token_not_revoked
+from datetime import datetime, timedelta
+from app.infrastructure.redis.dependencies import (
+   verify_token_not_revoked,
+   is_jti_revoked,
+   token_versioned_check,
+   save_refresh_token_jti,
+   save_refresh_token_version)
 
 # To Do: Finish out refresh token endpoint and register user endpoint
 
@@ -31,6 +40,7 @@ async def login_for_access_token(service: get_auth_service_dependency,request: L
       response.set_cookie(
          key="refresh_token",
          value=results.data.refresh_token,
+         path="/api/v1/auth/refresh",
          httponly=True, # Prevents client-side JS from accessing the cookie
          secure=True, # Set to True in production with HTTPS  # Recommended: Only send cookie over HTTPS
          samesite="lax", # Default browser behavior; restricts cross-site sending
@@ -62,7 +72,7 @@ async def login_for_access_token(service: get_auth_service_dependency,request: L
 
 
 
-@router.post("/register",response_model=TokenResponse, tags=["auth"])
+@router.post("/register",response_model=RefreshResponse, tags=["auth"])
 async def register_for_access_token(request:RegisterRequest,service:get_auth_service_dependency,response:Response) -> TokenResponse:
    """
    Create a user and generate a jwt token
@@ -122,29 +132,58 @@ async def refresh_token(refresh:RefreshRequest,request:Request,response:Response
                headers={"WWW-Authenticate": "Bearer"}
             )
       
-      # check redis cache if the token was blacklist or revoked
-      token_revoked = verify_token_not_revoked(token_verified)
-      if token_revoked:
+      # step 1: extract sub, ver and jti from claim
+      sub= token_verified.get('sub')
+      ver = token_verified.get('ver')
+      jti = token_verified.get('jti')
+
+      # step 2: fetch jti and check if jti exists in redis
+      jti_resutls = is_jti_revoked(jti)
+
+      if jti_resutls:
+         save_refresh_token_version(sub,ver)
          raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail='Token has been revoked',
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+            detail="jti is already used"
+         )
+      
+      # step 3: Get token version from redis
+      ver_results = token_versioned_check(sub)
+      # if version doesn't equal the version in redis raise 401 error
+      if ver != ver_results:
+         raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="version missmatch with token"
+         )
+      
+      # step 4: Burn old token if the version matches
+      save_refresh_token_jti(jti,expires_in=timedelta(minutes=15))
 
+     
       # if token has not been revoked we will issue a new access and refresh token
       access_token_expires = timedelta(minutes=settings.access_token_expire_minutes)
       # generate the access token
       access_token = create_access_token(
          subject=refresh.user_id,
          roles= refresh.roles,
-         
+         email_verified="",
          expires_delta=access_token_expires)
 
       new_refresh_token = refresh_token(subject=refresh.user_id)
+
+      response.set_cookie(
+         key="refresh_token",
+         value=new_refresh_token,
+         path="/api/v1/auth/refresh",
+         httponly=True,
+         secure=True, # Set to True in production with HTTPS
+         samesite="lax",
+         max_age=60 * 60 * 24 * settings.refresh_token_expire_days  # in seconds
+
+      )
+
       return {
          "access_token":access_token,
-         "refresh_token":new_refresh_token,
-         "token_type":"bearer"
       }
    except (JWTError, ValidationError):
       raise HTTPException(
@@ -158,13 +197,33 @@ async def refresh_token(refresh:RefreshRequest,request:Request,response:Response
    
 
 @router.post('/logout', tags=['auth'])
-async def logout(response: Response):
-    response.delete_cookie(
+async def logout(request:Request,response: Response):
+   refresh_token = request.cookies.get('refresh_token')
+   if not refresh_token:
+      raise HTTPException(
+         status_code=status.HTTP_401_UNAUTHORIZED,
+         detail="no refresh token!"
+      )
+   # verify token signature
+   token_verified = decode_token(refresh_token)
+   if not token_verified:
+      raise HTTPException(
+         status_code=status.HTTP_401_UNAUTHORIZED,
+         detail="Invalid signature",
+         headers={"WWW-Authenticate": "Bearer"}
+      )
+   
+   jti = token_verified.get('jti')
+
+   save_refresh_token_jti(jti,expires_in=timedelta(minutes=15))
+
+   response.delete_cookie(
         key="refresh_token",
+        path="/api/v1/auth/refresh",
         httponly=True,
         secure=True,
         samesite="lax"
     )
-    return {"message": "Successfully logged out"}
+   return {"message": "Successfully logged out"}
    
 
