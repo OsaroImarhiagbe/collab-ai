@@ -30,14 +30,14 @@ def create_access_token(subject: str,role:str,email_verified:bool,expires_delta:
 
     return encode_jwt
 
-def create_refresh_token(subject:str) -> str:
+def create_refresh_token(subject:str,ver:int) -> str:
     """ Create JWT refresh token"""
 
     expire = datetime.now() + timedelta(days=settings.refresh_token_expire_days)
 
     to_encode = {
         "sub":str(subject),
-        "ver":1,
+        "ver":ver,
         "jti":uuid4(),
         "iss":"https://yourdomain.com",
         "iat":datetime.now(UTC),
@@ -64,4 +64,4 @@ def decode_token(token:str) -> Dict[str,Any]:
         
         return payload
     except JWTError:
-        return None
+        raise

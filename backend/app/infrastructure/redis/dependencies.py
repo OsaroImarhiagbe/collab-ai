@@ -4,7 +4,7 @@ import json
 import json
 import uuid
 
-def save_refresh_token_version(user_id:str,ver: int, expires_in: int) -> None:
+async def save_refresh_token_version(user_id:str,ver: int, expires_in: int) -> None:
     """
     Stores the valid token version for a user.
     Automatically expires when the refresh token becomes invalid.
@@ -16,9 +16,9 @@ def save_refresh_token_version(user_id:str,ver: int, expires_in: int) -> None:
     ver+=1
 
     # 3. Serialize to JSON string and set the key with an expiration time
-    redis_client.set(key, str(ver), ex=expires_in)
+    await redis_client.set(key, str(ver), ex=expires_in)
 
-def save_refresh_token_jti(jti:str, expires_in: int) -> None:
+async def save_refresh_token_jti(jti:str, expires_in: int) -> None:
     """
     Stores the valid JTI for a user.
     Automatically expires when the refresh token becomes invalid.
@@ -27,24 +27,24 @@ def save_refresh_token_jti(jti:str, expires_in: int) -> None:
     key = f"token:used:jti"
     
     # 2. Serialize to JSON string and set the key with an expiration time
-    redis_client.set(key, jti, ex=expires_in)
+    await redis_client.set(key, jti, ex=expires_in)
 
 
 
-def is_jti_revoked(user_id:str) -> bool:
+async def is_jti_revoked(user_id:str) -> bool:
     """
     Check if jti is in redis
     """
     key = f"token:used:jti"
 
-    return bool(redis_client.get(key))
+    return bool(await redis_client.get(key))
 
-def token_versioned_check(user_id:str) -> int:
+async def token_versioned_check(user_id:str) -> int:
     """
     grab the token version from redis
     """
     key = f"user:auth:v1:{user_id}"
-    return redis_client.get(key)
+    return await redis_client.get(key)
 
 # def is_refresh_token_valid(user_id: str, incoming_jti: str, incoming_ver: int) -> bool:
 #     key = f"user:auth:v1:{user_id}"

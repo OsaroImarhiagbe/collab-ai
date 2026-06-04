@@ -8,14 +8,12 @@ from app.modules.auth.schemas.auth import (
    TokenResponse, 
    RefreshResponse, 
    LoginRequest, 
-   RegisterRequest, 
-   RefreshRequest)
+   RegisterRequest)
 from app.core.config import settings
 from app.modules.auth.service.dependencies import get_auth_service
-from app.middleware.jwt import create_access_token,decode_token
-from datetime import datetime, timedelta
+from app.middleware.jwt import create_access_token,decode_token,create_refresh_token
+from datetime import datetime, timedelta,timezone
 from app.infrastructure.redis.dependencies import (
-   verify_token_not_revoked,
    is_jti_revoked,
    token_versioned_check,
    save_refresh_token_jti,
@@ -49,10 +47,9 @@ async def login_for_access_token(service: get_auth_service_dependency,request: L
       )
       return results
    except LookupError as e:
-      return TokenResponse(
-         status=status.HTTP_404_NOT_FOUND,
-         error=str(e),
-         data=None
+       raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=str(e)
       )
    except ValueError as e:
       raise HTTPException(
@@ -88,6 +85,7 @@ async def register_for_access_token(request:RegisterRequest,service:get_auth_ser
          max_age=60 * 60 * 24 * settings.refresh_token_expire_days  # in seconds
 
       )
+      return results
    except ValueError as e:
       raise HTTPException(
          status_code=status.HTTP_409_CONFLICT,
@@ -101,54 +99,47 @@ async def register_for_access_token(request:RegisterRequest,service:get_auth_ser
 
 
 @router.get('/refresh',response_model=TokenResponse,tags=['auth'])
-async def refresh_token(refresh:RefreshRequest,request:Request,response:Response) -> Any:
+async def refresh_token(request:Request,response:Response) -> Any:
 
    """ Refresh Token Endpoint"""
 
    try:
       # extract refresh token from httponly cookie
-      refresh_token = request.cookies.get("refresh_token")
+      refresh_token_cookie = request.cookies.get("refresh_token")
       # if not refresh token in cookies return 401 error
-      if not refresh_token:
+      if not refresh_token_cookie:
          raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail='Invalid refresh token'
             )
       
       # verify token signature
-      token_verified = decode_token(refresh_token)
-      if not token_verified:
-         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid signature",
-            headers={"WWW-Authenticate": "Bearer"}
-         )
-      
-       # Check for token expiration
-      if datetime.fromtimestamp(token_verified.exp) < datetime.now():
-            raise HTTPException(
-               status_code=status.HTTP_401_UNAUTHORIZED,
-               detail='Token Expired',
-               headers={"WWW-Authenticate": "Bearer"}
-            )
-      
+      token_verified = decode_token(refresh_token_cookie)
+
       # step 1: extract sub, ver and jti from claim
       sub= token_verified.get('sub')
-      ver = token_verified.get('ver')
+      ver = int(token_verified.get('ver'),0)
       jti = token_verified.get('jti')
 
-      # step 2: fetch jti and check if jti exists in redis
-      jti_resutls = is_jti_revoked(jti)
+      # check jwt claims
+      if not all([sub, ver, jti]):
+         raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token claims"
+      )
 
-      if jti_resutls:
-         save_refresh_token_version(sub,ver)
+      # step 2: fetch jti and check if jti exists in redis
+      jti_results = await is_jti_revoked(jti)
+
+      if jti_results:
+         await save_refresh_token_version(sub,ver)
          raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="jti is already used"
          )
       
       # step 3: Get token version from redis
-      ver_results = token_versioned_check(sub)
+      ver_results = await token_versioned_check(sub)
       # if version doesn't equal the version in redis raise 401 error
       if ver != ver_results:
          raise HTTPException(
@@ -156,20 +147,29 @@ async def refresh_token(refresh:RefreshRequest,request:Request,response:Response
             detail="version missmatch with token"
          )
       
+      # get remaining ttl
+      exp = datetime.fromtimestamp(token_verified['exp'], tz=timezone.utc)
+      remaining_ttl = exp - datetime.now(tz=timezone.utc)
+      
       # step 4: Burn old token if the version matches
-      save_refresh_token_jti(jti,expires_in=timedelta(minutes=15))
+      await save_refresh_token_jti(jti,expires_in=remaining_ttl)
 
+      # increment version so old tokens with the old ver are invalid
+      new_ver = ver + 1
+      await save_refresh_token_version(sub, new_ver)
+      # create new refresh token with the incremented version
      
       # if token has not been revoked we will issue a new access and refresh token
       access_token_expires = timedelta(minutes=settings.access_token_expire_minutes)
       # generate the access token
       access_token = create_access_token(
-         subject=refresh.user_id,
-         roles= refresh.roles,
-         email_verified="",
-         expires_delta=access_token_expires)
+         subject=sub,  # from verified token, not request body
+         roles=token_verified.get('roles'),  # from verified token
+         email_verified=token_verified.get('email_verified', ''),
+         expires_delta=access_token_expires
+      )
 
-      new_refresh_token = refresh_token(subject=refresh.user_id)
+      new_refresh_token = create_refresh_token(subject=sub,ver=new_ver)
 
       response.set_cookie(
          key="refresh_token",
@@ -187,14 +187,19 @@ async def refresh_token(refresh:RefreshRequest,request:Request,response:Response
       }
    except (JWTError, ValidationError):
       raise HTTPException(
-         status_code=status.HTTP_403_FORBIDDEN,
-         detail='Could not validate credentials',
-         headers={"WWW-Authenticate": "Bearer"})
-   
+      status_code=status.HTTP_403_FORBIDDEN,
+      detail="Could not validate credentials",
+      headers={"WWW-Authenticate": "Bearer"}
+    )
+   except HTTPException:
+      raise
    except Exception as e:
-      print(f'Error at refersh endpoint: {e}') ## Could add logging here
-      raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='Interal server error')
-   
+      # True unexpected errors only — Redis down, DB down, etc.
+      print(f'Error at refresh endpoint: {e}')  # swap for proper logging later
+      raise HTTPException(
+         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+         detail="Internal server error"
+      )
 
 @router.post('/logout', tags=['auth'])
 async def logout(request:Request,response: Response):
@@ -215,7 +220,11 @@ async def logout(request:Request,response: Response):
    
    jti = token_verified.get('jti')
 
-   save_refresh_token_jti(jti,expires_in=timedelta(minutes=15))
+    # get remaining ttl
+   exp = datetime.fromtimestamp(token_verified['exp'], tz=timezone.utc)
+   remaining_ttl = exp - datetime.now(tz=timezone.utc)
+
+   await save_refresh_token_jti(jti,expires_in=remaining_ttl)
 
    response.delete_cookie(
         key="refresh_token",
