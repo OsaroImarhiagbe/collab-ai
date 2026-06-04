@@ -3,21 +3,25 @@ set -e
 
 MAX_RETRIES=30
 RETRY_INTERVAL=2
+HOST="${DB_HOST:-postgresql_db}"
+PORT="${DB_PORT:-5432}"
 count=0
 
-echo "⏳ Waiting for database to be ready..."
+echo "Waiting for PostgreSQL service to start at $HOST:$PORT........"
 
-until pg_isready -h db -p 5432 -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" -q; do
+until (echo > /dev/tcp/"$HOST"/"$PORT") 2>/dev/null; do
     count=$((count + 1))
+
     if [ "$count" -ge "$MAX_RETRIES" ]; then
         echo "❌ Database did not become ready after $((MAX_RETRIES * RETRY_INTERVAL))s. Exiting."
         exit 1
     fi
+
     echo "Database is unavailable - retry $count/$MAX_RETRIES..."
     sleep "$RETRY_INTERVAL"
 done
 
-echo "✅ Database is ready!"
+echo "PostgreSQL service is ready on  $HOST:$PORT! Continuing...."
 
 # Show pending migrations before applying (great for debugging)
 echo "📋 Pending migrations:"

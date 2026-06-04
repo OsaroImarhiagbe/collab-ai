@@ -12,7 +12,7 @@ class WorkSpaces(Base):
         index=True,
         unique=True,
         nullable=False,
-        server_default=func.uuid7(monotonic=True),
+        server_default=func.uuid7(),
         doc="Workspace id",
         comment="ID of the workspace (primary key)")
 
@@ -29,7 +29,7 @@ class WorkSpaces(Base):
         comment="The description of the workspace")
     
     owner_id:Mapped[UUID] = mapped_column(
-        ForeignKey('users_profile.id'),
+        ForeignKey('user_profile.id'),
         unique=True,
         server_default=func.uuid7(),
         doc="Workspace Owner",

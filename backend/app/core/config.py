@@ -28,14 +28,15 @@ class Settings(BaseSettings):
     fastapi_postgres_user:str
     postgres_password: SecretStr
     postgres_db:str
+    postgres_host:str
 
     # Alembic Database url
     def alembic_database_url_sync(self) -> str:
-        return f"postgresql+psycopg2://{self.alembic_postgres_user}:{self.postgres_password}@postgresql-db:{self.postgresql_port}/{self.postgres_db}"
+        return f"postgresql+psycopg2://{self.alembic_postgres_user}:{self.postgres_password.get_secret_value()}@{self.postgres_host}:{self.postgresql_port}/{self.postgres_db}"
     
     # FastAPI Database url
     def fastapi_database_url(self) -> str:
-        return f"postgresql+asyncpg://{self.fastapi_postgres_user}:{self.postgres_password}@postgresql-db:{self.postgresql_port}/{self.postgres_db}"
+        return f"postgresql+asyncpg://{self.fastapi_postgres_user}:{self.postgres_password.get_secret_value()}@{self.postgres_host}:{self.postgresql_port}/{self.postgres_db}"
     
 
     # Configuration for the model

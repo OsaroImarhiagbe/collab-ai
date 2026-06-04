@@ -12,7 +12,7 @@ class User_Profile(Base):
     id:Mapped[UUID] = mapped_column(
         primary_key=True, 
         index=True,
-        server_default=func.uuid7(monotonic=True),
+        server_default=func.uuid7(),
         doc="ID",
         comment="Id representing a user within the table")
 

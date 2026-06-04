@@ -13,7 +13,7 @@ class Tasks(Base):
         primary_key=True,
         index=True,
         nullable=False,
-        server_default=func.uuid7(monotonic=True),
+        server_default=func.uuid7(),
         doc="Task ID",
         comment="ID of Task")
 

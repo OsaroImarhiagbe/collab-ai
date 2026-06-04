@@ -21,9 +21,9 @@ class WorkSpaceMembers(Base):
         comment="Workspace memebr id")
 
     workkspace_id:Mapped[UUID] = mapped_column(
-        ForeignKey('workspace.id'),
+        ForeignKey('workspaces.id'),
         nullable=False,
-        dock="workspace id",
+        doc="workspace id",
         comment="ID of the workspace the memebrs belong to")
 
     user_id:Mapped[UUID] = mapped_column(

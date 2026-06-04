@@ -13,7 +13,7 @@ class Auth_Credentials(Base):
         primary_key=True, 
         index=True,
         unique=True,
-        server_default=func.uuid7(monotonic=True),
+        server_default=func.uuid7(),
         doc="Auth ID",
         comment="Id of the user") ## this is using v4 uuid
 
@@ -31,7 +31,7 @@ class Auth_Credentials(Base):
 
     emial_verified:Mapped[bool] = mapped_column(
         Boolean,
-        server_default= Email_Verified.not_verified.value,
+        server_default= str(Email_Verified.not_verified.value).lower(),
         nullable=False)
 
     role:Mapped[str] = mapped_column(

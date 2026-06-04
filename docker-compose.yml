@@ -19,7 +19,7 @@ services:
       retries: 5
       start_period: 10s
     volumes:
-      - postgresql_db_data:/var/lib/postgresql/data
+      - postgresql_db_data:/var/lib/postgresql
     networks:
       - app_network
   
@@ -30,8 +30,9 @@ services:
     ports:
       - "6379:6379"
     secrets:
-      - REDIS_PASSWORD
-    command: sh -c 'PASSOWRD=$$(cat /run/secrets/REDIS_PASSWORD) && exec redis-server --save 20 1 --loglevel warning --requirepass "$PASSWORD"'
+      - source: REDIS_PASSWORD
+        target: REDIS_PASSWORD
+    command: sh -c 'PASSWORD=$$(cat /run/secrets/REDIS_PASSWORD) && exec redis-server --save 20 1 --loglevel warning --requirepass "$$PASSWORD"'
     volumes:
       - redis_data:/data
     healthcheck:
@@ -54,6 +55,8 @@ services:
       - ./backend:/app
     env_file:
       - ./backend/.env.development
+    secrets:
+      - POSTGRES_PASSWORD
     restart: always
     depends_on:
       postgresql_db:
