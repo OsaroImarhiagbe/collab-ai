@@ -29,7 +29,7 @@ class Auth_Credentials(Base):
         doc="Password",
         comment="User's password")
 
-    emial_verified:Mapped[bool] = mapped_column(
+    email_verified:Mapped[bool] = mapped_column(
         Boolean,
         server_default= str(Email_Verified.not_verified.value).lower(),
         nullable=False)

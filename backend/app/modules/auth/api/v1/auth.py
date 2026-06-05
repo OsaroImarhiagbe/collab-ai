@@ -3,7 +3,7 @@ from typing import Any, Annotated
 from fastapi import APIRouter,Depends, HTTPException, status, Response, Request
 from jose import jwt, JWTError
 from pydantic import ValidationError
-from app.modules.auth.service.authService import AuthService
+from backend.app.modules.auth.service.auth_service import AuthService
 from app.modules.auth.schemas.auth import (
    TokenResponse, 
    RefreshResponse, 

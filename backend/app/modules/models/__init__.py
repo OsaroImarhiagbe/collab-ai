@@ -1,7 +1,7 @@
 # app/db/models/__init__.py
 
 from app.modules.user.models.user_profile import User_Profile
-from app.modules.auth.models.auth_credentials import Auth_Credentials
+from backend.app.modules.auth.infratructure.models.auth_credentials import Auth_Credentials
 from app.modules.workspaces.models.workspace import WorkSpaces
 from app.modules.workspaces.models.workspace_members import WorkSpaceMembers
 from app.modules.task.models.tasks import Tasks

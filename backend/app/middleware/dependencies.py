@@ -13,7 +13,7 @@ from app.middleware.jwt import decode_token
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.api_v1_str}/auth/login")
 
 ## this function will be our token validation function
-async def get_current_user():
+async def get_current_user() -> callable:
     """ Validate tokens and return username"""
     def _inner(token:str = Depends(oauth2_scheme)):
         try:
