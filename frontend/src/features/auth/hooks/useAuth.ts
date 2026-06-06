@@ -1,31 +1,39 @@
 import { useMutation } from "@tanstack/react-query";
-import type { ApiResponse } from "@/features/api/type";
-import type { AuthResponse } from "../types/type";
-import axios from 'axios'
+import { authService } from "../api/auth";
+import { useTokenStore } from "@/api/store/useTokenStore";
+import { useAuthStore } from "../store/useAuthStore";
 
 export const useLogin = () => {
+    const token_trigger = useTokenStore((state) => state.tokenTrigger)
+    const user_trigger = useAuthStore((state) => state.setUser)
     return useMutation({
-        mutationFn: async ({ email, password }: { email: string; password: string }) => {
-            const response: ApiResponse<AuthResponse> = await axios.post('fastapi-backend-ur;', {
-                email,
-                password,
-            })
+        mutationFn: async ({email,password}:{email:string,password:string}) => {
+            const { login } = authService
+            const response = await login(email,password)
 
             return response
+
+        },
+        onSuccess: (res) => {
+            token_trigger(res.access_token)
+            user_trigger(res.user)
         }
     })
 }
 
 export const useRegister = () => {
+    const token_trigger = useTokenStore((state) => state.tokenTrigger)
+    const user_trigger = useAuthStore((state) => state.setUser)
     return useMutation({
         mutationFn: async ({email,password, name}: {email:string, password:string,name:string}) => {
-            const response:ApiResponse<AuthResponse> = await axios.post('fastaspi-backend-url',{
-                email,
-                password,
-                name
-            })
+            const { register } = authService
+            const response = await register(email,password,name)
 
             return response
+        },
+        onSuccess: (res) => {
+            token_trigger(res.access_token)
+            user_trigger(res.user)
         }
     })
 }

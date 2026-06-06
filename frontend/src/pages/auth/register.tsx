@@ -1,7 +1,7 @@
 import  SignupForm  from "@/features/auth/components/signup-form";
-import { useState } from "react";
-import { useAuth } from "@/context/auth/authContext";
-import {type RegisterSchema } from "@/features/auth/types/type"; 
+import { useState, useCallback } from "react";
+import {type RegisterSchema } from "@/features/auth/types/type";
+import { useRegister } from "@/features/auth/hooks/useAuth";
 const Register = () => {
     
     const [ registerForm, setRegisterForm ] = useState<RegisterSchema>({
@@ -10,8 +10,11 @@ const Register = () => {
             password:'',
             confirmPassword:''
         })
-    
-    const { registerPending,handleRegister } = useAuth()
+    const { mutateAsync:register, isPending } = useRegister()
+
+    const handleSubmit = useCallback(async (registerForm:RegisterSchema) => {
+            await register({ email:registerForm.email, password:registerForm.password,name:registerForm.name });
+        },[register]);
     
     return (
         <main className="flex min-h-dvh flex-col items-center justify-center">
@@ -23,8 +26,8 @@ const Register = () => {
                     handleEmail={(val:string) => setRegisterForm((prev) => ({...prev, email:val}))}
                     handlePassword={(val:string) => setRegisterForm((prev) => ({...prev, password:val}))}
                     handleName={(val:string) => setRegisterForm((prev) => ({...prev, name:val}))}
-                    loading={registerPending}
-                    register={() => handleRegister(registerForm)}
+                    loading={isPending}
+                    register={() => handleSubmit(registerForm)}
                     />
             </section>
         </main>

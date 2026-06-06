@@ -1,8 +1,8 @@
 import { Navigate, Outlet } from 'react-router-dom';
+import type { AuthUser } from '@/features/auth/types/type';
+const ProtectedRoute = ({ isAuthenticated }:{isAuthenticated:AuthUser | null}) => {
 
-const ProtectedRoute = ({ isAuthenticated }:{isAuthenticated:boolean | undefined}) => {
-
-  return !isAuthenticated ? <Navigate to="/login" replace={true}/> : <Outlet/>;
+  return isAuthenticated ? <Outlet/> : <Navigate to="/login" replace={true}/> ;
 };
 
 export default ProtectedRoute;

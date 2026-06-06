@@ -52,16 +52,6 @@ export type AuthResponse = {
     user:AuthUser
 }
 
-
-
-
-
-
-
 export type AuthContextType = {
-    authenticated:AuthUser
-    loginPending:boolean
-    registerPending:boolean
-    handleLogin: (loginForm:LoginSchema) => void
-    handleRegister: (registerForm:RegisterSchema) => void
+    user:AuthUser | null,
 }

@@ -8,9 +8,9 @@ import { Routes, Route } from 'react-router-dom';
 import { useAuth } from './context/auth/authContext';
 function App() {
 
-  const { authenticated } = useAuth()
+  const { user} = useAuth()
 
-  console.log('Auth:',authenticated)
+  console.log('Auth:',user)
 
 
   return (
@@ -22,7 +22,7 @@ function App() {
 
 
       {/* Wrap protected routes */}
-    <Route element={<ProtectedRoute isAuthenticated={authenticated.authenticated}/>}>
+    <Route element={<ProtectedRoute isAuthenticated={user}/>}>
       <Route path="/" element={<WorkSpaceLayout/>}>
       {/* 1. Default screen when visiting /dashboard */}
       <Route index element={<Task/>} />
