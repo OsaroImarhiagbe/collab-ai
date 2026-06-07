@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, SecretStr
 from typing import Optional, List
 from enum import Enum
 from uuid import UUID
@@ -22,19 +22,20 @@ class RefreshResponse(BaseModel):
     access_token:str
 
 class LoginRequest(BaseModel):
+    name:str
     email: EmailStr
-    password:str
+    password:SecretStr
 
 class RegisterRequest(BaseModel):
     name:str
     email:str
-    password:str
+    password:SecretStr
 
 
 # Authentication Response Object
 class UserAuthenticationData(BaseModel):
     user_id:UUID
-    authenticated:str
+    email:EmailStr
 
 class Token(BaseModel):
     access_token: str

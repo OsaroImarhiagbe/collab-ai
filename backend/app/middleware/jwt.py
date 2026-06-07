@@ -16,7 +16,7 @@ def create_access_token(subject: str,role:str,email_verified:bool,expires_delta:
     to_encode = {
         "sub":str(subject),
         "email_verified":email_verified,
-        "iss":"https://yourdomain.com", # We will figure out how to add the iss later
+        "iss":"https://yourdomain.com", # We will figure out how to add the iss later and aud
         "role":role,
         "iat":datetime.now(UTC),
         "exp":expire,

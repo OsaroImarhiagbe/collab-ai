@@ -45,7 +45,7 @@ export type LoginSchema = z.infer<typeof loginSchema>;
 // }
 export type AuthUser = {
     user_id:string | undefined
-    authenticated:false | undefined
+    email:string | undefined
 }
 export type AuthResponse = {
     access_token:string
