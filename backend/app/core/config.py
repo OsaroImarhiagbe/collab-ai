@@ -4,7 +4,7 @@ import os
 class Settings(BaseSettings):
     environment:str = os.getenv("ENVIRONMENT","development")
     api_v1_str: str = "/api/v1"
-    project_name: str = "NextTask API"
+    project_name: str = "CollabAI API"
 
     # Security settings
     secret_key: SecretStr

@@ -2,8 +2,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.modules.auth.infrastructure.models.auth_credentials import Auth_Credentials
 from sqlalchemy import select
 from pydantic import EmailStr
+
 class AuthRepositories:
-    def __int__(self,db:AsyncSession):
+    """
+    Auth Service Data Acces Layer
+    """
+    def __init__(self,db:AsyncSession):
         self.__db = db
     
     async def grab_user_by_email(self,email:str):
@@ -13,7 +17,7 @@ class AuthRepositories:
 
         ## Look into what would happened if query based of email( like if email has an index)
         response = await self.__db.execute(select(
-             Auth_Credentials.id,
+             Auth_Credentials.user_id,
              Auth_Credentials.email,
              Auth_Credentials.hashed_password,
              Auth_Credentials.email_verified,
@@ -24,10 +28,9 @@ class AuthRepositories:
      
         user = response.scalar_one_or_none()
 
-        if user is None:
-            raise LookupError(f"User with email:'{email}' not found")
+    
 
-        return user
+        return user or None
     
     async def create_user(self, email: str, hashed_password: str):
         """
@@ -41,7 +44,7 @@ class AuthRepositories:
 
 
         new_user = Auth_Credentials(email=email, hashed_password=hashed_password)
-        await self.__db.add(new_user)
+        self.__db.add(new_user)
         await self.__db.commit()
         await self.__db.refresh(new_user)
 

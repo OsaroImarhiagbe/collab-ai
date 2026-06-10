@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { authService } from "../api/auth";
 import { useTokenStore } from "@/api/store/useTokenStore";
 import { useAuthStore } from "../store/useAuthStore";
-
+import { useNavigate } from "react-router-dom";
 export const useLogin = () => {
     const token_trigger = useTokenStore((state) => state.tokenTrigger)
     const user_trigger = useAuthStore((state) => state.setUser)
@@ -24,6 +24,7 @@ export const useLogin = () => {
 export const useRegister = () => {
     const token_trigger = useTokenStore((state) => state.tokenTrigger)
     const user_trigger = useAuthStore((state) => state.setUser)
+    const navigate = useNavigate()
     return useMutation({
         mutationFn: async ({email,password, name}: {email:string, password:string,name:string}) => {
             const { register } = authService
@@ -34,6 +35,7 @@ export const useRegister = () => {
         onSuccess: (res) => {
             token_trigger(res.access_token)
             user_trigger(res.user)
+            navigate('/')
         }
     })
 }

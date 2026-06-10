@@ -36,7 +36,7 @@ function SignupForm({
     handleEmail:(val:string) => void,
     handlePassword: (val:string) => void,
     handleName: (val:string) => void,
-    register:(name:string,email:string,password:string) => void
+    register:() => void
   }) {
   return (
     <Card {...props}>
@@ -47,7 +47,7 @@ function SignupForm({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form>
+        <form onSubmit={register}>
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor="name">Full Name</FieldLabel>
@@ -89,7 +89,7 @@ function SignupForm({
             </Field>
             <FieldGroup>
               <Field>
-                <Button type="submit" onClick={() => register(name,email,password)}>
+                <Button type="submit">
                   {loading ? <Spinner/> : null }
                  {loading ? 'Creating....' : 'Create Account'}</Button>
                 <Button variant="outline" type="button">

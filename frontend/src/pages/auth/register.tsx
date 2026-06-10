@@ -12,9 +12,9 @@ const Register = () => {
         })
     const { mutateAsync:register, isPending } = useRegister()
 
-    const handleSubmit = useCallback(async (registerForm:RegisterSchema) => {
-            await register({ email:registerForm.email, password:registerForm.password,name:registerForm.name });
-        },[register]);
+    const handleSubmit = useCallback(async () => {
+        await register({ email:registerForm.email, password:registerForm.password,name:registerForm.name });
+        },[registerForm.email,registerForm.name, registerForm.password,register]);
     
     return (
         <main className="flex min-h-dvh flex-col items-center justify-center">
@@ -27,7 +27,7 @@ const Register = () => {
                     handlePassword={(val:string) => setRegisterForm((prev) => ({...prev, password:val}))}
                     handleName={(val:string) => setRegisterForm((prev) => ({...prev, name:val}))}
                     loading={isPending}
-                    register={() => handleSubmit(registerForm)}
+                    register={handleSubmit}
                     />
             </section>
         </main>

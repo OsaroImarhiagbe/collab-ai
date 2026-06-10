@@ -8,6 +8,7 @@ export const AuthContextProvider = ({children}:PropsWithChildren) => {
     
  
     const user = useAuthStore((state) => state.user)
+    console.log('Auth Provider: Current User',user)
 
     const value = useMemo<AuthContextType>(() => ({
         user

@@ -25,20 +25,21 @@ def create_access_token(subject: str,role:str,email_verified:bool,expires_delta:
     ## Creating and Signing access token
     encode_jwt = jwt.encode(
         to_encode,
-        settings.secret_key, 
-        algorithm=[settings.algorithm])
+        settings.secret_key.get_secret_value(), 
+        algorithm=settings.algorithm.get_secret_value()
+    )
 
     return encode_jwt
 
 def create_refresh_token(subject:str,ver:int) -> str:
     """ Create JWT refresh token"""
 
-    expire = datetime.now() + timedelta(days=settings.refresh_token_expire_days)
+    expire = datetime.now(UTC) + timedelta(days=settings.refresh_token_expire_days)
 
     to_encode = {
         "sub":str(subject),
         "ver":ver,
-        "jti":uuid4(),
+        "jti":str(uuid4()),
         "iss":"https://yourdomain.com",
         "iat":datetime.now(UTC),
         "exp":expire,
@@ -46,8 +47,8 @@ def create_refresh_token(subject:str,ver:int) -> str:
 
     encode_jwt = jwt.encode(
         to_encode, 
-        settings.secret_key, 
-        algorithm=[settings.algorithm]
+        settings.secret_key.get_secret_value(), 
+        algorithm=settings.algorithm.get_secret_value()
     )
 
     return encode_jwt
@@ -57,7 +58,7 @@ def decode_token(token:str) -> Dict[str,Any]:
     """ Decode JWT token to verify it"""
 
     try:
-        payload = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
+        payload = jwt.decode(token, settings.secret_key, algorithms=settings.algorithm)
 
         if not payload:
             raise ValueError("Invalid token!")

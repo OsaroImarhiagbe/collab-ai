@@ -3,7 +3,7 @@ from typing import Any, Annotated
 from fastapi import APIRouter,Depends, HTTPException, status, Response, Request
 from jose import jwt, JWTError
 from pydantic import ValidationError
-from backend.app.modules.auth.service.auth_service import AuthService
+from app.modules.auth.service.auth_service import AuthService
 from app.modules.auth.schemas.auth import (
    TokenResponse, 
    RefreshResponse, 
@@ -39,8 +39,7 @@ async def login_for_access_token(service: get_auth_service_dependency,request: L
          key="refresh_token",
          value=results.data.refresh_token,
          path="/api/v1/auth/refresh",
-         httponly=True, # Prevents client-side JS from accessing the cookie
-         secure=True, # Set to True in production with HTTPS  # Recommended: Only send cookie over HTTPS
+         httponly=True, # Prevents client-side JS from accessing the cookie , # Set to True in production with HTTPS  # Recommended: Only send cookie over HTTPS
          samesite="lax", # Default browser behavior; restricts cross-site sending
          max_age=60 * 60 * 24 * settings.refresh_token_expire_days # in seconds
 
@@ -69,7 +68,7 @@ async def login_for_access_token(service: get_auth_service_dependency,request: L
 
 
 
-@router.post("/register",response_model=RefreshResponse, tags=["auth"])
+@router.post("/register",response_model=TokenResponse, tags=["auth"])
 async def register_for_access_token(request:RegisterRequest,service:get_auth_service_dependency,response:Response) -> TokenResponse:
    """
    Create a user and generate a jwt token
@@ -78,9 +77,9 @@ async def register_for_access_token(request:RegisterRequest,service:get_auth_ser
       results = await service.register_user(request)
       response.set_cookie(
          key="refresh_token",
-         value=results.refresh_token,
-         httponly=True,
-         secure=True, # Set to True in production with HTTPS
+         value=results.data.refresh_token,
+         path="/api/v1/auth/refresh",
+         httponly=True, # Set to True in production with HTTPS
          samesite="lax",
          max_age=60 * 60 * 24 * settings.refresh_token_expire_days  # in seconds
 
@@ -98,7 +97,7 @@ async def register_for_access_token(request:RegisterRequest,service:get_auth_ser
          )
 
 
-@router.get('/refresh',response_model=TokenResponse,tags=['auth'])
+@router.post('/refresh',response_model=TokenResponse,tags=['auth'])
 async def refresh_token(request:Request,response:Response) -> Any:
 
    """ Refresh Token Endpoint"""
@@ -118,7 +117,7 @@ async def refresh_token(request:Request,response:Response) -> Any:
 
       # step 1: extract sub, ver and jti from claim
       sub= token_verified.get('sub')
-      ver = int(token_verified.get('ver'),0)
+      ver = int(token_verified.get('ver',0))
       jti = token_verified.get('jti')
 
       # check jwt claims

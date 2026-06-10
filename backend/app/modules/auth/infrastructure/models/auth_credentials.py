@@ -49,12 +49,14 @@ class Auth_Credentials(Base):
 
     updated_at:Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
+        server_default=func.now(),
         server_onupdate=func.now(),
         doc="Updated At",
         comment="When the user was updated")
 
     last_login:Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
+        server_default=func.now(),
         server_onupdate=func.now(),
         doc="Last Login",
         comment="User's last login attempt")

@@ -12,7 +12,7 @@ app = FastAPI(
 )
 # Define the origins that are allowed to make requests to your API
 origins = [
-    "http://localhost:5173",      # React default port
+    "http://localhost:8080",      # React default port
     "https://yourdomain.com",     # Production domain
 ]
 

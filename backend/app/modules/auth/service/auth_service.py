@@ -61,6 +61,7 @@ class AuthService:
         """
         Service layer for user registration
         """
+        print('Checking if user exists')
         # Step 1: verify if email exists in database
         exisiting_user = await self.__repo.grab_user_by_email(email=request.email)
         if exisiting_user:
@@ -85,7 +86,7 @@ class AuthService:
         # Creating refresh token
         # Create first version of refresh token for new user
         version = 1
-        refresh_token = create_refresh_token(subject=user.id,ver=version) # id coming from database
+        refresh_token = create_refresh_token(subject=user.user_id,ver=version) # id coming from database
 
         return TokenResponse(
             status=status.HTTP_200_OK,
@@ -107,5 +108,5 @@ class AuthService:
         return self.__pwd_context.verify(plain_password, hash_password)
     
 
-    def _get_password(self,password:str) -> str:
+    def _get_password(self,password:str) -> str:  
         return self.__pwd_context.hash(password)
