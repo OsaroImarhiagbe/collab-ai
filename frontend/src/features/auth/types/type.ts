@@ -47,9 +47,15 @@ export type AuthUser = {
     user_id:string | undefined
     email:string | undefined
 }
+type Token = {
+  access_token:string
+  refresh_token:string | null
+  user: AuthUser
+}
 export type AuthResponse = {
-    access_token:string
-    user:AuthUser
+  status:number
+  error: string | null 
+  data: Token
 }
 
 export type AuthContextType = {

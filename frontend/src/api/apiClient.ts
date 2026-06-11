@@ -10,6 +10,7 @@ const apiClient = axios.create({
     'Content-Type': 'application/json'    // Optional: default headers
   }
 })
+apiClient.defaults.withCredentials = true
 
 const PUBLIC_ROUTES = ['/auth/register', '/auth/login', '/auth/refresh'];
 
