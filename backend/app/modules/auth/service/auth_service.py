@@ -73,7 +73,7 @@ class AuthService:
         # create the user within the db,.
         user = await self.__repo.create_user(request.email,hashed_password)
 
-    
+        print('Creating jwt......')
         access_token_expires = timedelta(minutes=settings.access_token_expire_minutes) #ex. 15 minutes
 
         # Signing and Createing access token
@@ -88,6 +88,7 @@ class AuthService:
         version = 1
         refresh_token = create_refresh_token(subject=user.user_id,ver=version) # id coming from database
 
+        print('JWT has been created returning to the client......')
         return TokenResponse(
             status=status.HTTP_200_OK,
             error="",

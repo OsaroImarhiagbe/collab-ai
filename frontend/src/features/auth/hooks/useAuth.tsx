@@ -31,13 +31,18 @@ export const useRegister = () => {
         mutationFn: async ({email,password, name}: {email:string, password:string,name:string}) => {
             const { register } = authService
             const response = await register(email,password,name)
-
+            console.log(`response for registration: ${response}`)
+            console.log('MUTATIONFN - response:', response)
             return response
         },
         onSuccess: (res) => {
+            console.log(`response for registration: ${res.data}`)
             token_trigger(res.data.access_token)
             user_trigger(res.data.user)
             navigate('/')
-        }
+        },
+        onError: (error) => {
+             console.log('onError:', error)  // ← is it actually erroring instead?
+            }
     })
 }

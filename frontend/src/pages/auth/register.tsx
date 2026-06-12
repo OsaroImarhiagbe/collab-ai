@@ -10,9 +10,10 @@ const Register = () => {
             password:'',
             confirmPassword:''
         })
-    const { mutateAsync:register, isPending } = useRegister()
+    const { mutateAsync:register, isPending} = useRegister()
 
-    const handleSubmit = useCallback(async () => {
+    const handleSubmit = useCallback(async (e: React.SubmitEvent) => {
+        e.preventDefault()
         await register({ email:registerForm.email, password:registerForm.password,name:registerForm.name });
         },[registerForm.email,registerForm.name, registerForm.password,register]);
     

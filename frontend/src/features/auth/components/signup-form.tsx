@@ -36,7 +36,7 @@ function SignupForm({
     handleEmail:(val:string) => void,
     handlePassword: (val:string) => void,
     handleName: (val:string) => void,
-    register:() => void
+    register:(e:React.SubmitEvent) => void
   }) {
   return (
     <Card {...props}>

@@ -35,16 +35,19 @@ async def login_for_access_token(service: get_auth_service_dependency,request: L
    try:
       # setting refresh token in httponly cookies
       results = await service.login_user(request)
+      print('Storing refresh token in jwt')
       response.set_cookie(
          key="refresh_token",
          value=results.data.refresh_token,
-         path="/api/v1/auth/refresh",
+         path="/api/v1/auth",
          httponly=True, # Prevents client-side JS from accessing the cookie , # Set to True in production with HTTPS  # Recommended: Only send cookie over HTTPS
          samesite="lax", # Default browser behavior; restricts cross-site sending
          secure=False,
          max_age=60 * 60 * 24 * settings.refresh_token_expire_days # in seconds
 
       )
+      print('Refresh token stored in jwt returning to the client')
+      print('auth resutls:',results)
       return results
    except LookupError as e:
        raise HTTPException(
@@ -79,13 +82,15 @@ async def register_for_access_token(request:RegisterRequest,service:get_auth_ser
       response.set_cookie(
          key="refresh_token",
          value=results.data.refresh_token,
-         path="/api/v1/auth/refresh",
+         path="/api/v1/auth",
          httponly=True, # Set to True in production with HTTPS
          samesite="lax",
          secure=False,
          max_age=60 * 60 * 24 * settings.refresh_token_expire_days  # in seconds
 
       )
+      print('Refresh token stored in jwt returning to the client')
+      print('auth resutls:',results)
       return results
    except ValueError as e:
       raise HTTPException(
@@ -175,7 +180,7 @@ async def refresh_token(request:Request,response:Response) -> Any:
       response.set_cookie(
          key="refresh_token",
          value=new_refresh_token,
-         path="/api/v1/auth/refresh",
+         path="/api/v1/auth",
          httponly=True,
          secure=False, # Set to True in production with HTTPS
          samesite="lax",
@@ -229,7 +234,7 @@ async def logout(request:Request,response: Response):
 
    response.delete_cookie(
         key="refresh_token",
-        path="/api/v1/auth/refresh",
+        path="/api/v1/auth",
         httponly=True,
         secure=True,
         samesite="lax"

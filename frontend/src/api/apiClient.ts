@@ -53,14 +53,14 @@ apiClient.interceptors.response.use(
 // Typed helper methods — these unwrap ApiResponse<T> for you
 export const api = {
   get: <T>(url: string, config?: Parameters<typeof apiClient.get>[1]) =>
-    apiClient.get<ApiResponse<T>>(url, config).then((r) => r.data),
+    apiClient.get<ApiResponse<T>>(url, config),
 
   post: <T>(url: string, body?: unknown, config?: Parameters<typeof apiClient.post>[2]) =>
-    apiClient.post<ApiResponse<T>>(url, body, config).then((r) => r.data),
+    apiClient.post<ApiResponse<T>>(url, body, config),
 
   patch: <T>(url: string, body?: unknown) =>
-    apiClient.patch<ApiResponse<T>>(url, body).then((r) => r.data),
+    apiClient.patch<ApiResponse<T>>(url, body),
 
   delete: <T>(url: string) =>
-    apiClient.delete<ApiResponse<T>>(url).then((r) => r.data),
+    apiClient.delete<ApiResponse<T>>(url),
 };
