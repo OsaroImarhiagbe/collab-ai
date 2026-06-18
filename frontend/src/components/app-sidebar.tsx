@@ -33,12 +33,12 @@ const data = {
   },
   teams: [
     {
-      name: "Acme Inc",
+      name: "Workspace 1",
       logo: <BriefcaseIcon />,
       plan: "Enterprise",
     },
     {
-      name: "Side Project",
+      name: "Workspace 2",
       logo: <RocketIcon />,
       plan: "Free",
     },
@@ -50,8 +50,7 @@ const data = {
       icon: <LayoutDashboardIcon />,
       isActive: true,
       items: [
-        { title: "Dashboard",  url: "#" },
-        { title: "My Tasks",   url: "#" },
+        { title: "My Tasks",   url: "/my-task" },
         { title: "Assigned",   url: "#" },
       ],
     },
@@ -60,7 +59,7 @@ const data = {
       url: "#",
       icon: <KanbanIcon />,
       items: [
-        { title: "Sprint 14",  url: "#" },
+        { title: "Sprint 14",  url: "/sprint-14" },
         { title: "Backlog",    url: "#" },
         { title: "Roadmap",    url: "#" },
       ],

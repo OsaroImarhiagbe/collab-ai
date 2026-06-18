@@ -25,3 +25,7 @@ export interface Column {
   color: string;
   tasks: Task[];
 }
+
+export type WorkSpace = {
+  workspace_id:string
+}

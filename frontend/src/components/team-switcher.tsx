@@ -81,7 +81,7 @@ export function TeamSwitcher({
               <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
                 <PlusIcon className="size-4" />
               </div>
-              <div className="font-medium text-muted-foreground">Add team</div>
+              <div className="font-medium text-muted-foreground">Create Workspace</div>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

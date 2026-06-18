@@ -1,5 +1,5 @@
 import { AppSidebar } from "@/components/app-sidebar"
-import { Outlet } from "react-router-dom"
+import { Outlet, useParams } from "react-router-dom"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,10 +18,10 @@ import {
 } from "@/components/ui/sidebar"
 
 const WorkspaceLayout = () => {
-
+  const { workspaceId } = useParams();
 
   return (
-       <SidebarProvider>
+      <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
         <header className="flex h-12 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
@@ -40,7 +40,7 @@ const WorkspaceLayout = () => {
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                  <BreadcrumbPage>{workspaceId}</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
@@ -54,3 +54,4 @@ const WorkspaceLayout = () => {
 }
 
 export default WorkspaceLayout;
+
