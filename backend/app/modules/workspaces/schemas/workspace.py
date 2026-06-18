@@ -9,5 +9,15 @@ class Workspace_Roles(Enum):
     MEMBER = 'memeber' # -> can create and upate tasks, change status
     GUEST ='guest' # -> read-only, can view tasks and comments
 
+class WorkSpace(BaseModel):
+    workspace_id:UUID
+    
+class WorkSpaceResponse(BaseModel):
+    status:int
+    error:Optional[str] = None
+    data: WorkSpace
+
+
 class WorkSpaceRequest(BaseModel):
     name:str
+    user_id:UUID

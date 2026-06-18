@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation,useQuery } from "@tanstack/react-query";
 import { WorkSpaceService } from "../api/workspace";
 import { useNavigate } from "react-router-dom";
 
@@ -18,5 +18,18 @@ export const useCreateWorkSpace = () => {
         onError: (error) => {
             console.error(error)
         }
+    })
+}
+
+export const useGrabWorkSpace = (user_id:string | undefined) => {
+    return useQuery({
+        queryKey:[user_id],
+        queryFn: async () => {
+            const { locate_workspace } = WorkSpaceService
+
+            const response = await locate_workspace()
+            return response
+        },
+        enabled:!!user_id
     })
 }

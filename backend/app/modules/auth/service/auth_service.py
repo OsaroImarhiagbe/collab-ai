@@ -61,7 +61,7 @@ class AuthService:
         # Step 1: verify if email exists in database
         exisiting_user = await self.__repo.grab_user_by_email(email=request.email)
         if exisiting_user:
-            raise LookupError('Email already exists')
+            raise ValueError('Email already exists')
         
         # hashed user password if email doesn't exists
         hashed_password = self._get_password(request.password.get_secret_value())

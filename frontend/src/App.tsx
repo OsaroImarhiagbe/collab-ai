@@ -20,7 +20,7 @@ function App() {
 
       <Route element={<ProtectedRoute isAuthenticated={user}/>}>
         {/* Resolves "which workspace" then redirects */}
-        <Route path="/" element={<WorkspaceRedirect/>}/>
+        <Route index element={<WorkspaceRedirect/>}/>
         <Route path="/create-workspace" element={<CreateWorkspace/>}/>
 
         <Route path="/workspace/:workspaceId" element={<WorkSpaceLayout/>}>
