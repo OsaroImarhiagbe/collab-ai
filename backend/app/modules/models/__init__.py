@@ -1,6 +1,6 @@
 # app/db/models/__init__.py
 
-from app.modules.user.models.user_profile import User_Profile
+from backend.app.modules.user.infrastructure.models.user_profile import User_Profile
 from app.modules.auth.infrastructure.models.auth_credentials import Auth_Credentials
 from app.modules.workspaces.models.workspace import WorkSpaces
 from app.modules.workspaces.models.workspace_members import WorkSpaceMembers

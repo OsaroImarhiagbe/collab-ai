@@ -1,14 +1,10 @@
 from datetime import timedelta
 from app.core.config import settings
 from passlib.context import CryptContext
-from sqlalchemy.ext.asyncio import AsyncSession
 from app.modules.auth.schemas.auth import LoginRequest, TokenResponse, RegisterRequest, Token, UserAuthenticationData
-from app.modules.models import Auth_Credentials
 from fastapi import status
 from app.middleware.jwt import create_access_token, create_refresh_token
-from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from app.modules.auth.infrastructure.auth_dal.auth_dal import AuthRepositories
-from pydantic import EmailStr
 
 class AuthService:
     """ Serivce handles the authentication and autherization within the backend application"""

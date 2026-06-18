@@ -20,7 +20,7 @@ class WorkSpaceMembers(Base):
         doc="Memebr ID",
         comment="Workspace memebr id")
 
-    workkspace_id:Mapped[UUID] = mapped_column(
+    workspace_id:Mapped[UUID] = mapped_column(
         ForeignKey('workspaces.id'),
         nullable=False,
         doc="workspace id",
