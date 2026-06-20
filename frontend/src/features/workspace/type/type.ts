@@ -29,3 +29,8 @@ export interface Column {
 export type WorkSpace = {
   workspace_id:string
 }
+
+export interface WorkSpaceContextType {
+  name:string,
+  handleSetName:(value:string) => void
+}

@@ -50,7 +50,7 @@ const data = {
       icon: <LayoutDashboardIcon />,
       isActive: true,
       items: [
-        { title: "My Tasks",   url: "/my-task" },
+        { title: "My Tasks",   url: "my-task" },
         { title: "Assigned",   url: "#" },
       ],
     },

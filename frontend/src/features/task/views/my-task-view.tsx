@@ -87,21 +87,10 @@ const MyTasksView = () => {
     if (!tid || fromId === colId) return;
   }
 
-  //   setColumns((prev) => {
-  //     const next = prev.map((c) => ({ ...c, tasks: [...c.tasks] }));
-  //     const from = next.find((c) => c.id === fromId)!;
-  //     const to = next.find((c) => c.id === colId)!;
-  //     const idx = from.tasks.findIndex((t) => t.id === tid);
-  //     if (idx === -1) return prev;
-  //     const [task] = from.tasks.splice(idx, 1);
-  //     to.tasks.push(task);
-  //     return next;
-  //   });
-  // }
- 
+
 
   return (
-    <section className="flex flex-col min-h-dvh w-full">
+    <section className="flex flex-col min-h-dvh w-full py-10 px-10">
       <BoardHeader
         totalTasks={0}
         search={search}
