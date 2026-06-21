@@ -17,4 +17,3 @@ export const WorkSpaceProvider = ({children}:PropsWithChildren) => {
     return <WorkSpaceContext.Provider value={value}>{children}</WorkSpaceContext.Provider>
 }
 
-export default WorkSpaceProvider

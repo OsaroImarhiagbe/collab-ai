@@ -4,8 +4,8 @@ import Register from './pages/auth/register';
 import WorkSpaceLayout from './pages/layout/workspacelayout';
 import MyTasksView from './features/task/views/my-task-view';
 import ProtectedRoute from './pages/protectedroutes';
-import WorkspaceRedirect from './pages/workspace-redirect';
-import CreateWorkspace from './pages/workspace/create-workspace';
+// import WorkspaceRedirect from './pages/workspace-redirect';
+// import CreateWorkspace from './pages/workspace/create-workspace';
 import { Routes, Route } from 'react-router-dom';
 import { useAuth } from './context/auth/authContext';
 
@@ -20,10 +20,10 @@ function App() {
 
       <Route element={<ProtectedRoute isAuthenticated={user}/>}>
         {/* Resolves "which workspace" then redirects */}
-        <Route index element={<WorkspaceRedirect/>}/>
-        <Route path="/create-workspace" element={<CreateWorkspace/>}/>
-
-        <Route path="/workspace/:workspaceId" element={<WorkSpaceLayout/>}>
+        {/* <Route index element={<WorkspaceRedirect/>}/>
+        <Route path="/create-workspace" element={<CreateWorkspace/>}/> */}
+{/* :workspaceId */}
+        <Route path="/workspace" element={<WorkSpaceLayout/>}>
           <Route path='my-task' element={<MyTasksView/>}/>
           {/* <Route path="sprint/:sprintId" element={<Task/>} /> */}
         </Route>

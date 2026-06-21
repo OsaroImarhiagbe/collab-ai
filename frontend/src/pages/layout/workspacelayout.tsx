@@ -1,5 +1,5 @@
 import { AppSidebar } from "@/components/app-sidebar"
-import { Outlet, useParams } from "react-router-dom"
+import { Outlet} from "react-router-dom"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,10 +16,11 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-
+import { useWorkSpace } from "@/context/workspace/workspaceContext"
+import Footer from "@/features/workspace/view/footer"
 const WorkspaceLayout = () => {
-  const { workspaceId } = useParams();
-
+  // const { workspaceId } = useParams();
+  const { name } = useWorkSpace()
   return (
       <SidebarProvider>
       <AppSidebar />
@@ -35,12 +36,12 @@ const WorkspaceLayout = () => {
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
                   <BreadcrumbLink href="#">
-                    Build Your Application
+                    Work Space
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>{workspaceId}</BreadcrumbPage>
+                  <BreadcrumbPage>{name}</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
@@ -49,6 +50,9 @@ const WorkspaceLayout = () => {
          {/* Each workspace screen renders here */}
         <Outlet />
       </SidebarInset>
+      <>
+      <Footer/>
+      </>
     </SidebarProvider>
   );
 }
