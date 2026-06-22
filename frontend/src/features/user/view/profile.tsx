@@ -90,7 +90,7 @@ const Profile = () => {
     }
   }
     return (
-        <section className="px-5">
+        <div>
           {/* Header */}
           <div className="mb-2">
             <h1 className="leading-tight tracking-tight">Profile</h1>
@@ -235,7 +235,7 @@ const Profile = () => {
             ))}
           </div>
         </section>
-        </section>
+        </div>
     )
 }
 export default Profile;

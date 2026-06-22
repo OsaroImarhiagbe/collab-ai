@@ -5,16 +5,21 @@ import type { UserContextType } from "@/features/user/type/types";
 
 export const UserProvider = ({children}:PropsWithChildren) => {
     const [open, setOpen] = useState(false);
+    const [activeTab, setActiveTab ] = useState('')
 
     const handleSetOpen = useCallback(() => setOpen(prev => !prev),[])
-
+    const handleSetActiveTab = useCallback((value:string) => setActiveTab(value),[])
     
 
     const value = useMemo<UserContextType>(() => ({
         open,
-        handleSetOpen 
+        activeTab,
+        handleSetOpen,
+        handleSetActiveTab
     }),[open,
-        handleSetOpen 
+        activeTab,
+        handleSetOpen,
+        handleSetActiveTab
     ])
     return <UserContext.Provider value={value}>{children}</UserContext.Provider>
 }

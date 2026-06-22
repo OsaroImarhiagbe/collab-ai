@@ -11,7 +11,7 @@ const PreferencesPage = () =>  {
 
   
   return (
-    <section className="px-5">
+    <div>
       <div className="mb-6">
         <h1 className="text-xl font-semibold">Preferences</h1>
         <p className="text-sm text-muted-foreground mt-1">
@@ -90,7 +90,7 @@ const PreferencesPage = () =>  {
           </Select>
         </div>
       </section>
-    </section>
+    </div>
   );
 }
 

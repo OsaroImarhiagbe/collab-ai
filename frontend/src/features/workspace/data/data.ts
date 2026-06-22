@@ -53,20 +53,7 @@ export const INITIAL_COLUMNS: Column[] = [
   },
 ];
 
-export const settings_columns = [
-  {
-  id:1,
-  title:'Emmanuel'
-},
-  {
-  id:2,
-  title:'Preference'
-},
-  {
-  id:3,
-  title:'Notification'
-},
-]
+
 
 export const data = {
   user: {

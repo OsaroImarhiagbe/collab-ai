@@ -6,29 +6,34 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { useUser } from "@/context/user/userContext";
-import { SidebarProvider, SidebarInset} from "@/features/workspace/components/sidebar"
-import { AppSidebar } from "@/features/workspace/components/app-sidebar"
-// import Profile from "@/features/user/view/profile";
-// import PreferencesPage from "@/features/settings/view/preference";
+import { SidebarProvider, SidebarInset} from "@/features/settings/components/sidebar"
+import { AppSidebar } from "@/features/settings/components/settings-sidebar"
+import Profile from "@/features/user/view/profile";
+import PreferencesPage from "@/features/settings/view/preference";
 import NotificationsPage from "@/features/notifications/view/notification";
+import WorkspaceSettingsPage from "./workspace-settings";
+import PeoplePage from "./people";
 const Footer = () => {
-  const { open, handleSetOpen } = useUser()
+  const { open,activeTab, handleSetOpen } = useUser()
 
 
-  // const renderContent = () => {
-  //   switch (activeTab) {
-  //     case "appearance":
-  //       return <AppearanceSection />;
-  //     case "language":
-  //       return <LanguageSection />;
-  //     case "datetime":
-  //       return <DateTimeSection />;
-  //     case "privacy":
-  //       return <PrivacySection />;
-  //     case "accessibility":
-  //       return <AccessibilitySection />;
-  //   }
-  // };
+  const renderContent = () => {
+    switch (activeTab) {
+      case "Emmanuel":
+        return <Profile/>;
+      case "Preference":
+        return <PreferencesPage/>;
+      case "Notification":
+        return <NotificationsPage/>;
+      case "General":
+        return <WorkspaceSettingsPage/>
+      case "People":
+        return <PeoplePage/>
+      default:
+        return <Profile/>
+
+    }
+  };
  
 
   return (
@@ -40,10 +45,12 @@ const Footer = () => {
             View and manage your profile, login information, and devices.
           </DialogDescription>
         </DialogHeader>
-        <SidebarProvider className="h-[300px] items-start">
-         <AppSidebar collapsible="none" className="hidden md:flex" />
+        <SidebarProvider>
+         <AppSidebar collapsible="none"/>
         <SidebarInset>
-            <NotificationsPage/>
+          <section className="px-7 overflow-y-auto h-[800px]">
+            {renderContent()}
+          </section>
         </SidebarInset>
         </SidebarProvider>
       </DialogContent>

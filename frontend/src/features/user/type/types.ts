@@ -82,5 +82,7 @@ export interface ProfileModalData {
 
 export interface UserContextType {
   open: boolean,
+  activeTab:string
   handleSetOpen:() => void
+  handleSetActiveTab:(value:string) => void
 }

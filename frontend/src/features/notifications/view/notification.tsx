@@ -19,11 +19,7 @@ const NotificationsPage = () => {
     },
   });
 
-  const updateNotification = (
-    section: "inApp" | "email",
-    key: string,
-    value: boolean
-  ) => {
+  const updateNotification = (section: "inApp" | "email",key: string,value: boolean) => {
     setNotifications((prev) => ({
       ...prev,
       [section]: {
@@ -34,7 +30,7 @@ const NotificationsPage = () => {
   };
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6 p-6">
+    <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-semibold">Notifications</h1>
         <p className="text-sm text-muted-foreground">
