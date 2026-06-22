@@ -13,6 +13,9 @@ import {
   Circle,
 } from "lucide-react";
 import type { ProfileModalData  } from "../type/types";
+import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+
 function initials(name: string) {
   return name
     .trim()
@@ -87,8 +90,19 @@ const Profile = () => {
     }
   }
     return (
-        <section>
-                {/* Compact identity header */}
+        <section className="px-5">
+          {/* Header */}
+          <div className="mb-2">
+            <h1 className="leading-tight tracking-tight">Profile</h1>
+            <p className="font-sans font-medium text-md tracking-tight leading-tight">Manage your profile, account information, and devices</p>
+          </div>
+          {/* Compact identity header */}
+           <div className="mt-5">
+            <h3 className="font-semibold font-sans tracking-tight leading-tight text-lg">
+              Account
+            </h3>
+          </div>
+          <Separator className="mb-5"/>
         <div className="flex items-center gap-3 pb-2">
           <Avatar className="h-12 w-12 border border-border">
             <AvatarImage src={user.avatarUrl ?? undefined} alt={user.fullName} />
@@ -97,9 +111,8 @@ const Profile = () => {
             </AvatarFallback>
           </Avatar>
           <div className="min-w-0">
-            <p className="truncate text-base font-semibold leading-tight">
-              {user.fullName}
-            </p>
+            <p className="text-muted-foreground font-sans">Preferred Name</p>
+            <Input value={user.fullName} className="truncate text-base font-semibold leading-tight border-2"/>
             <p className="truncate text-sm text-muted-foreground">{user.email}</p>
           </div>
           <Badge
@@ -113,22 +126,26 @@ const Profile = () => {
 
         {/* Login information */}
         <section className="pt-3">
-          <h3 className="mb-2 text-xs font-medium text-muted-foreground">
+          <h3 className="text-lg font-semibold font-sans">
             Login information
           </h3>
-          <div className="rounded-lg border border-border bg-card">
-            <div className="flex items-center justify-between gap-4 border-b border-border px-3 py-2.5">
-              <div className="flex items-center gap-2 text-sm">
-                <Mail className="h-3.5 w-3.5 text-muted-foreground" />
-                <span className="text-muted-foreground">Email</span>
+           <Separator className="mb-5"/>
+          <div className="bg-card space-y-5">
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col">
+               <div className="flex flex-row items-center gap-2">
+                  <span className="text-muted-foreground">Email</span>
+                  <Mail className="h-3.5 w-3.5 text-muted-foreground" />
+               </div>
+               <span className="truncate text-sm">{user.email}</span>
               </div>
-              <span className="truncate text-sm">{user.email}</span>
+               <span className="truncate text-sm">{user.email}</span> 
             </div>
 
-            <div className="flex items-center justify-between gap-4 border-b border-border px-3 py-2.5">
+            <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm">
-                <KeyRound className="h-3.5 w-3.5 text-muted-foreground" />
                 <span>Password</span>
+                <KeyRound className="h-3.5 w-3.5 text-muted-foreground" />
               </div>
               <Button
                 variant="outline"
@@ -136,11 +153,11 @@ const Profile = () => {
                 className="h-7 text-xs"
                 // onClick={onChangePassword}
               >
-                Change
+                Change Password
               </Button>
             </div>
 
-            <div className="flex items-center justify-between gap-4 px-3 py-2.5">
+            <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm">
                 {user.twoFactorEnabled ? (
                   <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
@@ -163,7 +180,7 @@ const Profile = () => {
 
         {/* Devices */}
         <section className="pt-4">
-          <h3 className="mb-2 text-xs font-medium text-muted-foreground">
+          <h3 className="mb-2 text-xs font-medium font-sans text-lg tracking-tight leading-tight text-muted-foreground">
             Devices ({sessions.length})
           </h3>
           <div className="overflow-hidden rounded-lg border border-border bg-card">

@@ -17,7 +17,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { useWorkSpace } from "@/context/workspace/workspaceContext"
-import Footer from "@/features/workspace/view/footer"
+import Footer from "@/features/settings/view/footer"
 const WorkspaceLayout = () => {
   // const { workspaceId } = useParams();
   const { name } = useWorkSpace()

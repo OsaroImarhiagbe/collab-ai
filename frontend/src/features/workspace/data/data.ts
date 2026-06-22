@@ -52,3 +52,107 @@ export const INITIAL_COLUMNS: Column[] = [
     ],
   },
 ];
+
+export const settings_columns = [
+  {
+  id:1,
+  title:'Emmanuel'
+},
+  {
+  id:2,
+  title:'Preference'
+},
+  {
+  id:3,
+  title:'Notification'
+},
+]
+
+export const data = {
+  user: {
+    name: "Alex Kim",
+    email: "alex@acme.com",
+    avatar: "/avatars/alex.jpg",
+  },
+  teams: [
+    {
+      name: "Workspace 1",
+      plan: "Enterprise",
+    },
+    {
+      name: "Workspace 2",
+      plan: "Free",
+    },
+  ],
+  navMain: [
+    {
+      title: "Overview",
+      url: "#",
+      isActive: true,
+      items: [
+        { title: "My Tasks",   url: "my-task" },
+        { title: "Assigned",   url: "#" },
+      ],
+    },
+    {
+      title: "Board",
+      url: "#",
+      items: [
+        { title: "Sprint 14",  url: "/sprint-14" },
+        { title: "Backlog",    url: "#" },
+        { title: "Roadmap",    url: "#" },
+      ],
+    },
+    {
+      title: "Tasks",
+      url: "#",
+      items: [
+        { title: "All Tasks",   url: "/board" },
+        { title: "In Progress", url: "#" },
+        { title: "Completed",   url: "#" },
+      ],
+    },
+    {
+      title: "Calendar",
+      url: "#",
+      items: [
+        { title: "Month View",  url: "#" },
+        { title: "Week View",   url: "#" },
+        { title: "Deadlines",   url: "#" },
+      ],
+    },
+    {
+      title: "Members",
+      url: "#",
+      items: [
+        { title: "Team",        url: "#" },
+        { title: "Workload",    url: "#" },
+        { title: "Invite",      url: "#" },
+      ],
+    },
+    {
+      title: "Settings",
+      url: "#",
+      items: [
+        { title: "General",     url: "#" },
+        { title: "Workspace",   url: "#" },
+        { title: "Billing",     url: "#" },
+        { title: "Notifications", url: "#" },
+      ],
+    },
+  ],
+  projects: [
+    {
+      name: "Product — Sprint 14",
+      url: "#",
+    },
+    {
+      name: "Marketing Campaign",
+      url: "#",
+    },
+    {
+      name: "Platform Infra",
+      url: "#",
+    },
+  ],
+}
