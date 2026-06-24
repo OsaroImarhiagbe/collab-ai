@@ -1,7 +1,7 @@
 from app.infrastructure.db.dependecies import get_db
 from typing import Annotated
 from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends
 from app.modules.auth.service.auth_service import AuthService
 from app.modules.auth.infrastructure.auth_dal.auth_dal import AuthRepositories
 
