@@ -13,21 +13,15 @@ class WorkSpaceService:
         function will handle create the workspace
         """
 
-        ## Step 1 : Check to see if we already have the workspace created
-        workspace_exists = await self.workspace_exists(workspace_id) # need to look at this function
-
-        # Step 2: if workspace is already made raise LookupError
-        if workspace_exists:
-            raise ValueError('Work space already exists!')
-        
-        # Step 3: if workspace does not exists we create it
+        # step 1: Create the workspace
         workspace_results = await self.__repo.create_workspace_in_db(workspace_name,workspace_owner_id)
 
+        # step 2: return workspace id
         return WorkSpaceResponse(
             status=status.HTTP_200_OK,
             error='',
             data=WorkSpace(
-                workspace_id=workspace_results.id
+                workspace_id=workspace_results.workspace_id
             )
         )
     

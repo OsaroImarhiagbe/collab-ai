@@ -34,3 +34,19 @@ async def create_workspace(request:WorkSpaceRequest,workspace_service: get_works
             detail=str(f'{e}')
         )
 
+# TO DO: finish post endpoint for adding a memeber to a workspace
+@router.post('/{workspace_id}/members')
+async def create_members():
+    """
+    Add members to a specific workspace
+    
+    """
+    pass
+
+# TO DO: finish delete endpoint for a certain workspace
+@router.delete('/{workspace_id}/delete')
+async def delete_workspace():
+    """
+    Delete the intended workspace.
+    """
+    pass

@@ -1,28 +1,28 @@
 from fastapi import APIRouter, Depends, HTTPException,status
 from app.modules.task.service.dependencies import get_task_service
 from app.modules.task.service.task_service import TaskService
-from app.modules.task.schemas.task import TaskResponse,TaskUpdateRequest,TaskReqest
-from typing import Annotated
+from app.modules.task.schemas.task import TaskResponse,TaskUpdateRequest,TaskReqest, TaskUpdateResponse
+from typing import Annotated, Dict
 from uuid import UUID
-
+from app.middleware.dependencies import get_current_user
+from sqlalchemy.exc import IntegrityError
 router = APIRouter(tags=["task"])
 
 get_task_service_dependency = Annotated[TaskService,Depends(get_task_service)]
-
-# /workspaces/{workspaceId}/tasks/{taskId}
+get_current_user_dependency = Annotated[Dict,Depends(get_current_user)]
 
 
 @router.post("/{workspace_id}/tasks",response_model=TaskResponse)
-async def create_task(workspace_id:UUID,request:TaskReqest,service:get_task_service_dependency) -> TaskResponse:
+async def create_task(workspace_id:UUID,request:TaskReqest,task_service:get_task_service_dependency) -> TaskResponse:
     """
     Create a new task within a certain workspace 
     """
     try:
-        response = await service.create_task_in_db(workspace_id=workspace_id,user_id=request.user_id,task_name=request.task_name)
+        response = await task_service.create_task_in_db(workspace_id,request.user_id,request.task_name)
         return response
     except LookupError as e:
         raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
+            status_code=status.HTTP_404_NOT_FOUND,
             detail=str(f"{e}")
             )
     except RuntimeError as e:
@@ -31,22 +31,43 @@ async def create_task(workspace_id:UUID,request:TaskReqest,service:get_task_serv
             detail=str(f"{e}")
         )
 
-@router.get('/{workspace_id}/tasks')
-async def get_all_task(workspace_id:UUID):
+@router.get('/{workspace_id}/tasks',response_model=TaskResponse)
+async def get_all_task(workspace_id:UUID,task_service:get_task_service_dependency,current_user:get_current_user_dependency) -> TaskResponse:
     """
     Grab all the task within a certain workspace
     """
-    pass
+    try:
+        response = await task_service.get_all_task_in_worksppace(workspace_id)
+        return response
+    except LookupError as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(f"{e}")
+        )
+    except RuntimeError as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(f"{e}")
+        )
 
-@router.patch('/{task_id}')
-async def update_task(task_id:UUID,request:TaskUpdateRequest):
+@router.patch('/{task_id}',response_model=TaskUpdateResponse)
+async def update_task(task_id:UUID,request:TaskUpdateRequest,task_service:get_task_service_dependency) -> TaskUpdateResponse:
+    ## Websocket service will play into this
     """
-    Update an individual task
+    Update an individual task information
     
     """
-    pass
+    try:
+        response = await task_service.update_task_information(task_id,request)
+        return response
+    except RuntimeError as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(f"{e}")
+        )
 
-@router.delete('/{tas_id}')
+# TO DO: finish delete endpoint for a task
+@router.delete('/{task_id}/delete')
 async def delete_task(task_id:UUID):
     """
     Delete an individual task

@@ -1,8 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.modules.user.infrastructure.models.user_profile import User_Profile
 from sqlalchemy import select
-from pydantic import EmailStr
-
+from typing import Dict, Any
 
 class UserRepositories:
     """

@@ -1,6 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.modules.workspaces.infrastructure.models.workspace import WorkSpaces
-from sqlalchemy import select,wh
+from app.modules.workspaces.infrastructure.models.workspace_members import WorkSpaceMembers
+from app.modules.workspaces.schemas.workspace import Workspace_Roles
+from sqlalchemy import select
 from uuid import UUID
 
 class WorkSpaceRepositories:
@@ -22,14 +24,19 @@ class WorkSpaceRepositories:
 
     async def create_workspace_in_db(self,name:str,user_id:UUID):
         """
-        Data Access Layer function
+        Data Access Layer function, to create the workspace and set the creator of the workspace as owner
         """
         new_workspace = WorkSpaces(name=name,owner_id=user_id)
+        
         self.__db.add(new_workspace)
-        await self.__db.commit()
-        await self.__db.refresh(new_workspace)
+        await self.__db.flush()
 
-        if any(feild is None for feild in [new_workspace.id]):
+        new_workspace_members = WorkSpaceMembers(workspace_id=new_workspace.workspace_id,user_id=user_id)
+
+        self.__db.add(new_workspace_members)
+        self.__db.commit()
+
+        if any(feild is None for feild in [new_workspace.workspace_id]):
             raise RuntimeError("workspace was inserted but one or more DB-generated fields were not returned")
         
         return new_workspace

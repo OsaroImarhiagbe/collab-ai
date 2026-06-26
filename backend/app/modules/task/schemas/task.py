@@ -7,7 +7,6 @@ from typing import Optional
 class TaskStatus(Enum):
     ACTIVE = 'active' # task has started to be worked on
     COMPLETED = 'completed' # task is completed end to end
-    UPDATED = 'updated' # task was updated
     UNACTIVE = 'unactive' # task was first assigned or created not yet started
 
 
@@ -20,9 +19,12 @@ class TaskResponse(BaseModel):
     error:Optional[str] = None
     data: Task
 
+class TaskUpdateResponse(BaseModel):
+    status:int
+    error:Optional[str] = None
 class TaskUpdateRequest(BaseModel):
-    assignee_id:UUID
-    status:TaskStatus
+    assignee_id:Optional[UUID] = None
+    status:Optional[TaskStatus] = None
 
 class TaskReqest(BaseModel):
     user_id:UUID

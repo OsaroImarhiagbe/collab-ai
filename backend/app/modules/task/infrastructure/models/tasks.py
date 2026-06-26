@@ -3,13 +3,13 @@ from app.modules.models.base import Base
 from sqlalchemy import func,String, DateTime,ForeignKey
 from uuid import UUID
 from datetime import datetime
-
+from app.modules.task.schemas.task import TaskStatus
 
 class Tasks(Base):
 
     __tablename__ = "tasks"
 
-    id:Mapped[UUID] = mapped_column(
+    task_id:Mapped[UUID] = mapped_column(
         primary_key=True,
         index=True,
         nullable=False,
@@ -32,6 +32,7 @@ class Tasks(Base):
     status:Mapped[str] = mapped_column(
         String(30),
         nullable=False,
+        server_default= TaskStatus.UNACTIVE.value,
         doc="Task Status", 
         comment='Status of the task.')
 
@@ -50,6 +51,7 @@ class Tasks(Base):
     created_by:Mapped[UUID] = mapped_column(
         ForeignKey('user_profile.user_id'),
         doc="Creator ID",
+        nullable=False,
         comment='Who created the task')
 
     created_at:Mapped[datetime] = mapped_column(
@@ -60,6 +62,7 @@ class Tasks(Base):
     
     updated_at:Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
+        server_default=func.now(),
         server_onupdate=func.now(),
         doc="Task Update",
         comment="When the task was updated")
