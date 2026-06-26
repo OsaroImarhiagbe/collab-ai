@@ -7,7 +7,7 @@ from datetime import datetime
 class WorkSpaces(Base):
     __tablename__ = "workspaces"
 
-    id:Mapped[UUID] = mapped_column(
+    workspace_id:Mapped[UUID] = mapped_column(
         primary_key=True,
         index=True,
         unique=True,
@@ -16,7 +16,7 @@ class WorkSpaces(Base):
         doc="Workspace id",
         comment="ID of the workspace (primary key)")
 
-    name:Mapped[str] = mapped_column(
+    workspace_name:Mapped[str] = mapped_column(
         String(30),
         nullable=False,
         doc="Workspace Name",

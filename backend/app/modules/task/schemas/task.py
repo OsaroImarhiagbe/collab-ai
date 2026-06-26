@@ -23,8 +23,7 @@ class TaskResponse(BaseModel):
 class TaskUpdateRequest(BaseModel):
     assignee_id:UUID
     status:TaskStatus
-    
+
 class TaskReqest(BaseModel):
-    workspace_id:UUID
     user_id:UUID
     task_name:str

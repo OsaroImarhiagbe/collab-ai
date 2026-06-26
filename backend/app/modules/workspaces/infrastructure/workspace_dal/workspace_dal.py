@@ -2,19 +2,19 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.modules.workspaces.infrastructure.models.workspace import WorkSpaces
 from sqlalchemy import select,wh
 from uuid import UUID
+
 class WorkSpaceRepositories:
     def __init__(self,db:AsyncSession):
         self.__db = db
     
 
-    async def grab_workspace_from_db(self,name:str):
+    async def grab_workspace_from_db(self,workspace_id:UUID):
         """
         Data Layer function to grab workspace by the name
         """
         results = await self.__db.execute(select(
             WorkSpaces.id,
-            WorkSpaces.name
-        ).where(WorkSpaces.name == name))
+        ).where(WorkSpaces.id == workspace_id))
 
         workspace = results.first()
 
