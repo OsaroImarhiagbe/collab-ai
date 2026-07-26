@@ -4,7 +4,7 @@ from app.middleware.dependencies import get_current_user
 from app.modules.user.service.dependencies import get_user_service
 from app.core.config import settings
 from app.modules.user.schemas.user import User
-from backend.app.modules.user.service.user_service import UserService
+from app.modules.user.service.user_service import UserService
 
 ## To Do: Finish user logic connect to user service
 # pydantic settings

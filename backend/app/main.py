@@ -1,5 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI,status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from app.core.config import settings
 from app.api.v1.router import router as v1_router
 
@@ -27,6 +28,12 @@ app.add_middleware(
 
 app.include_router(v1_router, prefix=settings.api_v1_str)
 
+@app.exception_handler(404)
+async def not_found_handler(request, exc):
+    return JSONResponse(
+        status_code=status.HTTP_404_NOT_FOUND,
+       content={"success": False, "message": "Resource not found"}
+    )
 # app.include_router(auth_router,        prefix="/auth",       tags=["auth"])
 # app.include_router(users_router,       prefix="/users",      tags=["users"])
 # app.include_router(tasks_router,       prefix="/tasks",      tags=["tasks"])
