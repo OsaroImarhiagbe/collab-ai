@@ -28,7 +28,7 @@ jobs:
 
             # Postgres
             POSTGRES_HOST: localhost
-            POSTGRES_PORT: 5432
+            POSTGRESQL_PORT: 5432
             POSTGRES_DB: test_db
             POSTGRES_PASSWORD: test_password
             ALEMBIC_POSTGRES_USER: test_user
