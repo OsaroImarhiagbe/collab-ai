@@ -1,7 +1,9 @@
-from app.infrastructure.db.dependecies import get_db
 from typing import Annotated
+
+from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi import Depends 
+
+from app.infrastructure.db.dependecies import get_db
 from app.modules.task.infrastructure.task_dal.task_dal import TaskRepositories
 from app.modules.task.service.task_service import TaskService
 

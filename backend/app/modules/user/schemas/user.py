@@ -1,6 +1,7 @@
-from pydantic import BaseModel, EmailStr, Field
-from typing import Optional, List
 from enum import Enum
+
+from pydantic import BaseModel
+
 
 class Role(Enum):
     ADMIN = 'admin'
@@ -15,18 +16,18 @@ class User(BaseModel):
 
 class UserCreate(BaseModel):
     password: str
-    full_name: Optional[str] = None
+    full_name: str | None = None
 
 class UserInDB(BaseModel):
     id: int
     hashed_password: str
-    full_name: Optional[str] = None
-    roles: List[str] = ["user"]
+    full_name: str | None = None
+    roles: list[str] = ["user"]
 
     # class Config:
     #     orm_mode = True
 
-class User(BaseModel):
+class User1(BaseModel):
     id: int
     name:str
 

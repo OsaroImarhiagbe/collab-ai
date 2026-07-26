@@ -1,7 +1,8 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-from app.modules.auth.infrastructure.models.auth_credentials import Auth_Credentials
 from sqlalchemy import select
-from pydantic import EmailStr
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.modules.auth.infrastructure.models.auth_credentials import Auth_Credentials
+
 
 class AuthRepositories:
     """

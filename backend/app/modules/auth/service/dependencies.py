@@ -1,9 +1,11 @@
-from app.infrastructure.db.dependecies import get_db
 from typing import Annotated
-from sqlalchemy.ext.asyncio import AsyncSession
+
 from fastapi import Depends
-from app.modules.auth.service.auth_service import AuthService
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.infrastructure.db.dependecies import get_db
 from app.modules.auth.infrastructure.auth_dal.auth_dal import AuthRepositories
+from app.modules.auth.service.auth_service import AuthService
 
 get_database_dependency = Annotated[AsyncSession,Depends(get_db)]
 

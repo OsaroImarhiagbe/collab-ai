@@ -48,7 +48,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: tracking-app-backend
+    container_name: collabai-app-backend
     ports:
       - "8000:8000"
     volumes:
@@ -76,7 +76,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: tracking-app-frontend
+    container_name: collabai-app-frontend
     ports:
       - "8080:8080"
     volumes:

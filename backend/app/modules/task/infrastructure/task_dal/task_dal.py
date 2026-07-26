@@ -1,8 +1,11 @@
+from uuid import UUID
+
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select,update
+
 from app.modules.task.infrastructure.models.tasks import Tasks
 from app.modules.task.schemas.task import TaskStatus, TaskUpdateRequest
-from uuid import UUID
+
 
 class TaskRepositories:
     """

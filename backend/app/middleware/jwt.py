@@ -1,11 +1,13 @@
-from typing import Optional, Dict, Any
-from datetime import timedelta, datetime,UTC
-from app.core.config import settings
-from jose import jwt,JWTError
+from datetime import UTC, datetime, timedelta
+from typing import Any
 from uuid import uuid4
 
+from jose import jwt
 
-def create_access_token(subject: str,role:str,email_verified:bool,expires_delta: Optional[timedelta] = None) -> str:
+from app.core.config import settings
+
+
+def create_access_token(subject: str,role:str,email_verified:bool,expires_delta: timedelta | None = None) -> str:
     """ Creates JWT Access Token"""
 
     if expires_delta:
@@ -54,15 +56,10 @@ def create_refresh_token(subject:str,ver:int) -> str:
     return encode_jwt
     
 
-def decode_token(token:str) -> Dict[str,Any]:
+def decode_token(token:str) -> dict[str,Any]:
     """ Decode JWT token to verify it"""
-
-    try:
-        payload = jwt.decode(token, settings.secret_key, algorithms=settings.algorithm)
-
-        if not payload:
-            raise ValueError("Invalid token!")
+    payload = jwt.decode(token, settings.secret_key, algorithms=settings.algorithm)
+    if not payload:
+        raise ValueError("Invalid token!")
         
-        return payload
-    except JWTError:
-        raise
+    return payload

@@ -1,11 +1,12 @@
-/backend/tracking-app-env
+/backend/collabai-env
 /backend/.env.*
 /frontend/.env.*
 /backend/*/__pycache__/
 __pycache__/
 
 /frontend/.pnpm-store
-
+/backend/.pytest_cache
+/backend/.ruff_cache
 
 secrets/
 .env*

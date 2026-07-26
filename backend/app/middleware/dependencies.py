@@ -1,14 +1,13 @@
-from typing import List,Optional
 from datetime import datetime
-from app.core.config import settings
-from jose import JWTError
-from app.modules.auth.schemas.auth import TokenPayload
-from fastapi import HTTPException, status, Depends
+
+from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError
 from pydantic import ValidationError
+
+from app.core.config import settings
 from app.middleware.jwt import decode_token
-
-
+from app.modules.auth.schemas.auth import TokenPayload
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.api_v1_str}/auth/login")
 
@@ -44,7 +43,7 @@ async def get_current_user(token:str = Depends(oauth2_scheme)):
 async def get_current_user_id(current_user = Depends(get_current_user)) -> str:
     return str(current_user['sub'])
 
-def get_current_user_with_roles(required_roles:Optional[List[str]] = None) -> callable:
+def get_current_user_with_roles(required_roles:list[str] | None = None) -> callable:
     """
     Creates a dependency that checks if the current user has the required roles
     """

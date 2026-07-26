@@ -1,6 +1,9 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import SecretStr
 import os
+
+from pydantic import SecretStr
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
 class Settings(BaseSettings):
     environment:str = os.getenv("ENVIRONMENT","development")
     api_v1_str: str = "/api/v1"

@@ -1,6 +1,4 @@
-from fastapi import WebSocket,APIRouter
-
-
+from fastapi import APIRouter, WebSocket
 
 router = APIRouter(tags=["something"])
 

@@ -1,9 +1,17 @@
 from uuid import UUID
-from app.modules.task.infrastructure.task_dal.task_dal import TaskRepositories
-from app.modules.task.schemas.task import TaskResponse,Task, TaskUpdateRequest, TaskUpdateResponse
+
 from fastapi import status
+
+from app.modules.task.infrastructure.task_dal.task_dal import TaskRepositories
+from app.modules.task.schemas.task import (
+    Task,
+    TaskResponse,
+    TaskUpdateRequest,
+    TaskUpdateResponse,
+)
 from app.modules.workspaces.service.workspace_service import WorkSpaceService
-from sqlalchemy.exc import IntegrityError
+
+
 class TaskService:
     """
     Task Service handles all relation task operation.

@@ -1,7 +1,7 @@
-from pydantic import BaseModel, EmailStr
-from typing import Optional, List
 from enum import Enum
 from uuid import UUID
+
+from pydantic import BaseModel
 
 
 class Workspace_Roles(Enum):
@@ -14,7 +14,7 @@ class WorkSpace(BaseModel):
     
 class WorkSpaceResponse(BaseModel):
     status:int
-    error:Optional[str] = None
+    error:str | None = None
     data: WorkSpace
 
 

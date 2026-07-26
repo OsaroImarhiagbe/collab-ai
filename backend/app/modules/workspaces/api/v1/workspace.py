@@ -1,15 +1,17 @@
-from typing import Any, Annotated, Dict
-from fastapi import APIRouter,Depends, HTTPException, status
-from pydantic import ValidationError
-from app.modules.workspaces.service.workspace_service import WorkSpaceService
-from app.modules.workspaces.service.dependencies import get_workspace_service
-from app.modules.workspaces.schemas.workspace import WorkSpaceRequest,WorkSpaceResponse
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, HTTPException, status
+
 from app.middleware.dependencies import get_current_user
+from app.modules.workspaces.schemas.workspace import WorkSpaceRequest, WorkSpaceResponse
+from app.modules.workspaces.service.dependencies import get_workspace_service
+from app.modules.workspaces.service.workspace_service import WorkSpaceService
+
 # To Do: Finish out refresh token endpoint and register user endpoint
 
 
 get_workspace_service_dependency = Annotated[WorkSpaceService, Depends(get_workspace_service)]
-get_current_user_dependency = Annotated[Dict,Depends(get_current_user)]
+get_current_user_dependency = Annotated[dict,Depends(get_current_user)]
 
 
 # /workspaces/{workspaceId}/tasks
@@ -41,7 +43,6 @@ async def create_members():
     Add members to a specific workspace
     
     """
-    pass
 
 # TO DO: finish delete endpoint for a certain workspace
 @router.delete('/{workspace_id}/delete')
@@ -49,4 +50,3 @@ async def delete_workspace():
     """
     Delete the intended workspace.
     """
-    pass

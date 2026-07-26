@@ -1,8 +1,7 @@
+
+
 from app.infrastructure.redis.client import redis_client
-from fastapi import HTTPException,status
-import json
-import json
-import uuid
+
 
 async def save_refresh_token_version(user_id:str,ver: int, expires_in: int) -> None:
     """
@@ -24,7 +23,7 @@ async def save_refresh_token_jti(jti:str, expires_in: int) -> None:
     Automatically expires when the refresh token becomes invalid.
     """
     # 1. Reconstruct your specific key format
-    key = f"token:used:jti"
+    key = "token:used:jti"
     
     # 2. Serialize to JSON string and set the key with an expiration time
     await redis_client.set(key, jti, ex=expires_in)
@@ -35,7 +34,7 @@ async def is_jti_revoked(user_id:str) -> bool:
     """
     Check if jti is in redis
     """
-    key = f"token:used:jti"
+    key = "token:used:jti"
 
     return bool(await redis_client.get(key))
 

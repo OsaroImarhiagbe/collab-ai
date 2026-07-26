@@ -5,10 +5,8 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 
-
 from app.core.config import settings
 
- 
 # The engine manages the connection pool.
 # One engine per application — create it once at module level.
 engine = create_async_engine(

@@ -1,7 +1,10 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-from app.modules.user.infrastructure.models.user_profile import User_Profile
+from typing import Any
+
 from sqlalchemy import select
-from typing import Dict, Any
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.modules.user.infrastructure.models.user_profile import User_Profile
+
 
 class UserRepositories:
     """
@@ -11,7 +14,7 @@ class UserRepositories:
     def __int__(self,db:AsyncSession):
         self.__db = db
     
-    async def _grab_user_by_id(self,current_user:Dict[str,Any]):
+    async def _grab_user_by_id(self,current_user:dict[str,Any]):
         """
         Function purpose is to query the database for a user based of an id
         """
