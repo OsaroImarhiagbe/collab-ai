@@ -14,6 +14,25 @@ jobs:
         env:
             SECRET_KEY: ci-test-secret-key-not-real
             ENVIRONMENT: test
+
+            # JWT
+            ACCESS_TOKEN_EXPIRE_MINUTES: 30
+            REFRESH_TOKEN_EXPIRE_DAYS: 7
+            ALGORITHM: HS256
+
+            # Redis
+            REDIS_HOST: localhost
+            REDIS_PORT: 6379
+            REDIS_DB: 0
+            REDIS_PASSWORD: ""
+
+            # Postgres
+            POSTGRES_HOST: localhost
+            POSTGRES_PORT: 5432
+            POSTGRES_DB: test_db
+            POSTGRES_PASSWORD: test_password
+            ALEMBIC_POSTGRES_USER: test_user
+            FASTAPI_POSTGRES_USER: test_user
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
@@ -31,9 +50,7 @@ jobs:
             
             - name: Lint with Ruf
               working-directory: backend
-              run: |
-                pip install ruff
-                ruff check .
+              run: ruff check .
             
 
             - name: Run tests
