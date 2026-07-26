@@ -1,10 +1,12 @@
 # api/v1/router.py
 from fastapi import APIRouter
-from app.modules.user.api.v1.users import router as users_router
+
 from app.modules.auth.api.v1.auth import router as auth_router
 from app.modules.health.api.v1.health import router as health_router
-from app.modules.websockets.api.v1.websockets import router as websocket_router
 from app.modules.task.api.v1.task import router as task_router
+from app.modules.user.api.v1.users import router as users_router
+from app.modules.websockets.api.v1.websockets import router as websocket_router
+
 router = APIRouter()
 
 router.include_router(users_router, prefix="/users")

@@ -1,23 +1,25 @@
-from datetime import timedelta
-from typing import Any, Annotated
-from fastapi import APIRouter,Depends, HTTPException, status, Response, Request
-from jose import jwt, JWTError
+from datetime import datetime, timedelta, timezone
+from typing import Annotated, Any
+
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
+from jose import JWTError
 from pydantic import ValidationError
-from app.modules.auth.service.auth_service import AuthService
-from app.modules.auth.schemas.auth import (
-   TokenResponse, 
-   RefreshResponse, 
-   LoginRequest, 
-   RegisterRequest)
+
 from app.core.config import settings
-from app.modules.auth.service.dependencies import get_auth_service
-from app.middleware.jwt import create_access_token,decode_token,create_refresh_token
-from datetime import datetime, timedelta,timezone
 from app.infrastructure.redis.dependencies import (
    is_jti_revoked,
-   token_versioned_check,
    save_refresh_token_jti,
-   save_refresh_token_version)
+   save_refresh_token_version,
+   token_versioned_check,
+)
+from app.middleware.jwt import create_access_token, create_refresh_token, decode_token
+from app.modules.auth.schemas.auth import (
+   LoginRequest,
+   RegisterRequest,
+   TokenResponse,
+)
+from app.modules.auth.service.auth_service import AuthService
+from app.modules.auth.service.dependencies import get_auth_service
 
 # To Do: Finish out refresh token endpoint and register user endpoint
 
@@ -64,10 +66,10 @@ async def login_for_access_token(service: get_auth_service_dependency,request: L
          status_code=status.HTTP_403_FORBIDDEN,
          detail=str(e)
       )
-   except RuntimeError as e:
+   except RuntimeError:
       raise HTTPException(
          status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-         detail=f"Internal server error"
+         detail="Internal server error"
       )
 
 
@@ -97,7 +99,7 @@ async def register_for_access_token(request:RegisterRequest,service:get_auth_ser
          status_code=status.HTTP_409_CONFLICT,
          detail=str(e)
       )
-   except RuntimeError as e:
+   except RuntimeError:
       raise HTTPException(
          status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
          detail="Internal Server Error"

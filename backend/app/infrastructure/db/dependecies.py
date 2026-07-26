@@ -1,10 +1,11 @@
-from app.infrastructure.db.session import AsyncSessionLocal
-from sqlalchemy.ext.asyncio import AsyncSession
-from typing import AsyncGenerator
-from app.middleware.dependencies import get_current_user,get_current_user_id
+from typing import Annotated
+
 from fastapi import Depends
-from typing import Annotated, Dict
 from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.infrastructure.db.session import AsyncSessionLocal
+from app.middleware.dependencies import get_current_user_id
 
 get_current_user_id_dependency = Annotated[str,Depends(get_current_user_id)]
 

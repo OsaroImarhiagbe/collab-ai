@@ -1,5 +1,8 @@
-from app.modules.websockets.connection.connection_manager import ConnectionManager
 from uuid import UUID
+
+from app.modules.websockets.connection.connection_manager import ConnectionManager
+
+
 class WebSocketService:
     def __int__(self,connection_manager: ConnectionManager):
         self.__manager = connection_manager

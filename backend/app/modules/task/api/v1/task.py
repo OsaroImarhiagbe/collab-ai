@@ -1,15 +1,22 @@
-from fastapi import APIRouter, Depends, HTTPException,status
+from typing import Annotated
+from uuid import UUID
+
+from fastapi import APIRouter, Depends, HTTPException, status
+
+from app.middleware.dependencies import get_current_user
+from app.modules.task.schemas.task import (
+    TaskReqest,
+    TaskResponse,
+    TaskUpdateRequest,
+    TaskUpdateResponse,
+)
 from app.modules.task.service.dependencies import get_task_service
 from app.modules.task.service.task_service import TaskService
-from app.modules.task.schemas.task import TaskResponse,TaskUpdateRequest,TaskReqest, TaskUpdateResponse
-from typing import Annotated, Dict
-from uuid import UUID
-from app.middleware.dependencies import get_current_user
-from sqlalchemy.exc import IntegrityError
+
 router = APIRouter(tags=["task"])
 
 get_task_service_dependency = Annotated[TaskService,Depends(get_task_service)]
-get_current_user_dependency = Annotated[Dict,Depends(get_current_user)]
+get_current_user_dependency = Annotated[dict,Depends(get_current_user)]
 
 
 @router.post("/{workspace_id}/tasks",response_model=TaskResponse)
@@ -72,4 +79,3 @@ async def delete_task(task_id:UUID):
     """
     Delete an individual task
     """
-    pass

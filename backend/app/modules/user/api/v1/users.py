@@ -1,16 +1,17 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends
-from typing import List, Annotated, Dict
+
 from app.middleware.dependencies import get_current_user
-from app.modules.user.service.dependencies import get_user_service
-from app.core.config import settings
 from app.modules.user.schemas.user import User
+from app.modules.user.service.dependencies import get_user_service
 from app.modules.user.service.user_service import UserService
 
 ## To Do: Finish user logic connect to user service
 # pydantic settings
 
 
-get_current_user_dependency = Annotated[Dict,Depends(get_current_user)]
+get_current_user_dependency = Annotated[dict,Depends(get_current_user)]
 
 get_user_service_dependency = Annotated[UserService,Depends(get_user_service)]
 

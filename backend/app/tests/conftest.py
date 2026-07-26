@@ -1,14 +1,16 @@
 import pytest
 from fastapi.testclient import TestClient
-from app.main import app
-from app.middleware.jwt import create_access_token
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from app.main import app
-from app.modules.models.base import Base
+
 from app.infrastructure.db.dependecies import get_db
+from app.main import app
+from app.middleware.dependencies import get_current_user
+from app.middleware.jwt import create_access_token
 from app.modules.auth.infrastructure.models.auth_credentials import Auth_Credentials
 from app.modules.auth.service.auth_service import AuthService
+from app.modules.models.base import Base
+
 TEST_DATABASE_URL = "postgresql://test_user:test_password@localhost:5432/test_db"
 
 engine = create_engine(TEST_DATABASE_URL,)

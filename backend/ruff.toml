@@ -1,0 +1,8 @@
+[lint]
+ignore = [
+    "BLE001",   # blind exception catch — fix later
+    "B008",     # Depends() in defaults — FastAPI pattern, acceptable
+    "DTZ005",   # datetime.now() without tz — fix later
+    "DTZ006",   # datetime.fromtimestamp() without tz — fix later
+    "PLR1722",  # exit() vs sys.exit() — minor
+]

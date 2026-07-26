@@ -1,7 +1,8 @@
-from pydantic import BaseModel, EmailStr, SecretStr
-from typing import Optional, List
 from enum import Enum
 from uuid import UUID
+
+from pydantic import BaseModel, EmailStr, SecretStr
+
 
 # User Authentication Role
 class Role(Enum):
@@ -45,16 +46,16 @@ class Token(BaseModel):
 
 class TokenResponse(BaseModel):
     status:int
-    error:Optional[str] = None
+    error:str | None = None
     data: Token
 
 class TokenPayload(BaseModel):
-    sub: Optional[str] = None
-    exp: Optional[int] = None
-    roles: List[str] = []
+    sub: str | None = None
+    exp: int | None = None
+    roles: list[str] = []
 
 class TokenData(BaseModel):
-    username: Optional[str] = None
+    username: str | None = None
 
 
 class RefreshTokenRespone(BaseModel):

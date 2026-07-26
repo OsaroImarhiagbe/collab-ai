@@ -1,9 +1,12 @@
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import func,String,Boolean, DateTime
-from app.modules.models.base import Base
-from uuid import UUID
-from app.modules.auth.schemas.auth import Role, Email_Verified
 from datetime import datetime
+from uuid import UUID
+
+from sqlalchemy import Boolean, DateTime, String, func
+from sqlalchemy.orm import Mapped, mapped_column
+
+from app.modules.auth.schemas.auth import Email_Verified, Role
+from app.modules.models.base import Base
+
 
 class Auth_Credentials(Base):
 

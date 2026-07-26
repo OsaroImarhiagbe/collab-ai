@@ -5,7 +5,8 @@
 __pycache__/
 
 /frontend/.pnpm-store
-
+/backend/.pytest_cache
+/backend/.ruff_cache
 
 secrets/
 .env*

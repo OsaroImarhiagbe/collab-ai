@@ -1,8 +1,12 @@
+from uuid import uuid4
+
 import pytest
 from fastapi.testclient import TestClient
+
 from app.main import app
 from app.middleware.jwt import create_access_token
-from uuid import uuid4
+
+
 @pytest.fixture
 def client():
     """

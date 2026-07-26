@@ -1,10 +1,19 @@
 from datetime import timedelta
-from app.core.config import settings
-from passlib.context import CryptContext
-from app.modules.auth.schemas.auth import LoginRequest, TokenResponse, RegisterRequest, Token, UserAuthenticationData
+
 from fastapi import status
+from passlib.context import CryptContext
+
+from app.core.config import settings
 from app.middleware.jwt import create_access_token, create_refresh_token
 from app.modules.auth.infrastructure.auth_dal.auth_dal import AuthRepositories
+from app.modules.auth.schemas.auth import (
+    LoginRequest,
+    RegisterRequest,
+    Token,
+    TokenResponse,
+    UserAuthenticationData,
+)
+
 
 class AuthService:
     """ Serivce handles the authentication and autherization within the backend application"""

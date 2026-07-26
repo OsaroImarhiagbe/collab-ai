@@ -5,24 +5,26 @@ Revises: d1d6fa09521f
 Create Date: 2026-06-04 20:04:20.829922
 
 """
-from typing import Sequence, Union
+from collections.abc import Sequence
 
-from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
+
+from alembic import op
 from app.helpers.helpers import read_secret
+
 # revision identifiers, used by Alembic.
 revision: str = 'c37496d89102'
-down_revision: Union[str, Sequence[str], None] = 'd1d6fa09521f'
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+down_revision: str | Sequence[str] | None = 'd1d6fa09521f'
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
     """Upgrade schema."""
     #========== ROLES ====================
     fastapi_password = read_secret("POSTGRES_PASSWORD")
-    op.execute(f"""
+    op.execute("""
                DO $$ 
                BEGIN
                 IF NOT EXISTS ( SELECT 1 FROM pg_roles WHERE rolname = 'authenticated') THEN

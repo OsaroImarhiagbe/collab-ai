@@ -1,7 +1,7 @@
-from pydantic import BaseModel
-from uuid import UUID
 from enum import Enum
-from typing import Optional
+from uuid import UUID
+
+from pydantic import BaseModel
 
 
 class TaskStatus(Enum):
@@ -16,15 +16,15 @@ class Task(BaseModel):
 
 class TaskResponse(BaseModel):
     status:int
-    error:Optional[str] = None
+    error:str | None = None
     data: Task
 
 class TaskUpdateResponse(BaseModel):
     status:int
-    error:Optional[str] = None
+    error:str | None = None
 class TaskUpdateRequest(BaseModel):
-    assignee_id:Optional[UUID] = None
-    status:Optional[TaskStatus] = None
+    assignee_id:UUID | None = None
+    status:TaskStatus | None = None
 
 class TaskReqest(BaseModel):
     user_id:UUID
