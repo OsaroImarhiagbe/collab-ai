@@ -1,4 +1,4 @@
-/backend/tracking-app-env
+/backend/collabai-env
 /backend/.env.*
 /frontend/.env.*
 /backend/*/__pycache__/
