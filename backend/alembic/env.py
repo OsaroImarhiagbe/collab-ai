@@ -6,7 +6,11 @@ from sqlalchemy import pool
 from alembic import context
 
 from app.modules.models.base import Base
-from app.modules.models import Auth_Credentials, User_Profile,WorkSpaceMembers,WorkSpaces,Tasks
+from app.modules.user.infrastructure.models.user_profile import User_Profile
+from app.modules.auth.infrastructure.models.auth_credentials import Auth_Credentials
+from app.modules.workspaces.infrastructure.models.workspace import WorkSpaces
+from app.modules.workspaces.infrastructure.models.workspace_members import WorkSpaceMembers
+from app.modules.task.infrastructure.models.tasks import Tasks
 import os
 from app.core.config import settings
 # this is the Alembic Config object, which provides
