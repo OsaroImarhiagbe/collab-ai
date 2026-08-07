@@ -1,3 +1,4 @@
+'use client'
 import {  useMemo, type PropsWithChildren } from "react";
 import type { AuthContextType  } from "@/features/auth/types/type";
 

@@ -23,3 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 .pnpm-store
+# ...
+.next
+next-env.d.ts
+dist

@@ -1,4 +1,5 @@
-import LoginForm  from "@/features/auth/components/login-form";
+'use client'
+import LoginForm from "@/features/auth/components/login-form"
 import { useState, useCallback } from "react";
 import type { LoginSchema } from "@/features/auth/types/type";
 import { useLogin } from "@/features/auth/hooks/useAuth";
@@ -15,7 +16,7 @@ const LoginScreen = () => {
     },[login]);
     
     return (
-        <main className="flex min-h-dvh flex-col items-center justify-center">
+        <main className="flex min-h-dvh flex-col items-center justify-center bg-white">
             <section className="w-full md:max-w-md">
                   <LoginForm
                   email={loginForm.email}
@@ -29,3 +30,4 @@ const LoginScreen = () => {
     )
 }
 export default LoginScreen;
+

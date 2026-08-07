@@ -1,3 +1,4 @@
+'use client'
 import { useMemo, type PropsWithChildren, useState, useCallback } from "react"
 import { UserContext } from "./userContext"
 import type { UserContextType } from "@/features/user/type/types";

@@ -1,3 +1,4 @@
+'use client'
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -13,7 +14,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { Link } from "react-router-dom"
+import Link from "next/link"
 import { memo } from 'react'
 import { Spinner } from "@/components/ui/spinner"
 
@@ -96,7 +97,7 @@ function SignupForm({
                   Sign up with Google
                 </Button>
                 <FieldDescription className="px-6 text-center">
-                  Already have an account? <Link to="/login">Sign in</Link>
+                  Already have an account? <Link href="/login">Sign in</Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>

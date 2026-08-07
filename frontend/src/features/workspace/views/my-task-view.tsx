@@ -2,7 +2,7 @@
 import BoardHeader from "@/features/task/components/board-header"
 import BoardColumn  from "@/features/task/components/border-column"
 import { useState, useRef } from "react"
-import type { BoardData } from "../types/types"
+import type { BoardData } from "../../task/types/types"
 const currentUserId = 'u_1'
 const mockBoardData:BoardData = {
     columns: [
