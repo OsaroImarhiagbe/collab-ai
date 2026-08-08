@@ -35,23 +35,26 @@ export function NavProjects({
       <SidebarMenu>
         {projects.map((item) => (
           <SidebarMenuItem key={item.name}>
-            <SidebarMenuButton asChild>
-              <a href={item.url}>
-                {item.icon}
-                <span>{item.name}</span>
-              </a>
-            </SidebarMenuButton>
+            <SidebarMenuButton
+              render={
+                <a href={item.url}>
+                  {item.icon}
+                  <span>{item.name}</span>
+                </a>
+              }
+            />
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuAction
-                  showOnHover
-                  className="aria-expanded:bg-muted"
-                >
-                  <MoreHorizontalIcon
-                  />
-                  <span className="sr-only">More</span>
-                </SidebarMenuAction>
-              </DropdownMenuTrigger>
+              <DropdownMenuTrigger
+                render={
+                  <SidebarMenuAction
+                    showOnHover
+                    className="aria-expanded:bg-muted"
+                  >
+                    <MoreHorizontalIcon />
+                    <span className="sr-only">More</span>
+                  </SidebarMenuAction>
+                }
+              />
               <DropdownMenuContent
                 className="w-48 rounded-lg"
                 side={isMobile ? "bottom" : "right"}

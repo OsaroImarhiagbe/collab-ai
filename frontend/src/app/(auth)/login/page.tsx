@@ -3,7 +3,8 @@ import LoginForm from "@/features/auth/components/login-form"
 import { useState, useCallback } from "react";
 import type { LoginSchema } from "@/features/auth/types/type";
 import { useLogin } from "@/features/auth/hooks/useAuth";
-const LoginScreen = () => {
+
+export default function Page(){
 
     const [ loginForm, setLoginForm ] = useState<LoginSchema>({
             email:'',
@@ -29,5 +30,5 @@ const LoginScreen = () => {
         </main>
     )
 }
-export default LoginScreen;
+
 

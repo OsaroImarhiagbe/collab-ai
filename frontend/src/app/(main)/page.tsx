@@ -1,6 +1,10 @@
-'use client'
-export default function Hero(){
-    return (
-        <div><p>Hello world</p></div>
-    );
+
+
+export default function Page(){
+
+  return (
+    <section className="flex flex-col min-h-dvh w-full">
+        <p>Hello World</p>
+    </section>
+  )
 }

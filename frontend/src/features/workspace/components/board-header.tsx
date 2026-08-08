@@ -9,10 +9,11 @@ import { cn } from "@/lib/utils";
 interface BoardHeaderProps {
   totalTasks: number;
   search: string;
+  header:string;
   onSearchChange: (val: string) => void;
 }
 
-export function BoardHeader({ totalTasks, search, onSearchChange }: BoardHeaderProps) {
+export default function BoardHeader({ totalTasks, search, header, onSearchChange }: BoardHeaderProps) {
   return (
     <div className="flex items-center gap-3 px-4 py-2.5 border-b bg-background flex-wrap">
       {/* Live indicator + title */}
@@ -21,7 +22,7 @@ export function BoardHeader({ totalTasks, search, onSearchChange }: BoardHeaderP
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
           <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
         </span>
-        <span className="text-sm font-semibold">Sprint 14</span>
+        <span className="text-sm font-semibold">{header}</span>
         <Badge variant="outline" className="text-[10px]">Board</Badge>
         <Badge variant="secondary" className="text-[10px] text-emerald-700 bg-emerald-100">
           {totalTasks} tasks

@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-
 import { NavMain } from "@/components/nav-main"
 import { NavProjects } from "@/components/nav-projects"
 import { NavUser } from "@/components/nav-user"
@@ -50,7 +49,7 @@ const data = {
       icon: <LayoutDashboardIcon />,
       isActive: true,
       items: [
-        { title: "My Tasks",   url: "/workspace/my-task" },
+        { title: "My Tasks",   url: "/task/" },
         { title: "Assigned",   url: "#" },
       ],
     },
@@ -69,9 +68,10 @@ const data = {
       url: "#",
       icon: <ListTodoIcon />,
       items: [
-        { title: "All Tasks",   url: "/board" },
-        { title: "In Progress", url: "#" },
-        { title: "Completed",   url: "#" },
+        { title: "My Tasks",   url: "/task/2" },
+        { title: "All Tasks",   url: "/task/1" },
+        { title: "In Progress", url: "/task/3" },
+        { title: "Completed",   url: "/task/4" },
       ],
     },
     {

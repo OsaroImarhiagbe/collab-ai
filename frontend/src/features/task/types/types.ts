@@ -41,10 +41,7 @@ export interface BoardHeaderProps {
   search: string;
   onSearchChange: (val: string) => void;
 }
-export interface BoardData {
-  tasks: Record<string, Task>;
-  columns: Column[];
-}
+
 
 export interface MyTasksViewProps {
   boardData: BoardData;

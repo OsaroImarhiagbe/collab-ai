@@ -1,3 +1,4 @@
+'use client'
 import { useState } from "react";
 
 import WorkspaceInfoCard from "@/features/settings/components/workspace-info"

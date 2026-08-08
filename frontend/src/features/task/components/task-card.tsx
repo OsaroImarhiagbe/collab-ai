@@ -54,7 +54,7 @@ export function TaskCard({ task, isDone, onDragStart }: TaskCardProps) {
       {/* Footer */}
       <div className="flex items-center justify-between">
         <div className="flex -space-x-1.5">
-          {task.assignees.map((m) => (
+          {task?.assignees?.map((m) => (
             <Avatar key={m.id} className="h-5 w-5 text-[9px] border-2 border-white">
               <AvatarFallback className={cn("text-[9px]", m.color)}>
                 {m.initials}

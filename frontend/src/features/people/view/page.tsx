@@ -1,3 +1,4 @@
+'use client'
 import { useState } from "react";
 
 import InvitePeopleCard from "@/features/settings/components/people-invite";

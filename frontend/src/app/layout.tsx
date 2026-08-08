@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { AuthContextProvider } from '@/context/auth/authProvider.tsx'
 import { QueryContextProvider } from '@/context/queryContext.tsx'
 import { TooltipProvider } from "@/components/ui/tooltip"
-import { WorkSpaceProvider } from '@/context/workspace/workspaceProvider.tsx'
 import { UserProvider } from '@/context/user/userProvider.tsx'
 import "@/app/globals.css"
 import {  Geist } from "next/font/google";
@@ -25,13 +24,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn("font-sans", geist.variable)}>
       <body>
-         <TooltipProvider>
+        <TooltipProvider>
       <QueryContextProvider>
         <AuthContextProvider>
           <UserProvider>
-          <WorkSpaceProvider>
             {children}
-          </WorkSpaceProvider>
           </UserProvider>
     </AuthContextProvider>
     </QueryContextProvider>
