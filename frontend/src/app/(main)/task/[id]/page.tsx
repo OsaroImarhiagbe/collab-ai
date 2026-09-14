@@ -3,6 +3,8 @@ import BoardHeader from "@/features/workspace/components/board-header"
 import BoardColumn  from "@/features/workspace/components/border-column"
 import { useState, useRef } from "react"
 import type { BoardData } from "@/features/workspace/type/type"
+import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation"
 import { use } from 'react'
 const currentUserId = 'u_1'
 const mockBoardData:BoardData = {
@@ -68,7 +70,7 @@ export default function Page({params}:{params:Promise<{ id:string }>}){
   const [search, setSearch] = useState("");
   // const totalTasks = mockBoardData.tasks.reduce((sum, c) => sum + c.tasks.length, 0);
   const [dragOverColId, setDragOverColId] = useState<string | null>(null);
-
+  const router = useRouter();
 
   const dragTaskId = useRef<string | null>(null);
   const dragFromColId = useRef<string | null>(null);
@@ -98,7 +100,10 @@ export default function Page({params}:{params:Promise<{ id:string }>}){
   const page_id = id === '1' ? 'All Task' : id === '2' ? "My Task" : id === '3' ? "In Progress" : "Task"
 
   return (
-    <section className="flex flex-col min-h-dvh w-full">
+    <section className="min-h-dvh w-full">
+      <Button onClick={() => router.back()}>
+        Go to main
+      </Button>
       <BoardHeader
         totalTasks={0}
         search={search}

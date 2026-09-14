@@ -15,7 +15,8 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 import { ChevronRightIcon } from "lucide-react"
-
+import { useWorkSpaceStore } from "@/features/workspace/store/useWorkSpaceStore"
+import Link from "next/link"
 export function NavMain({
   items,
 }: {
@@ -30,6 +31,8 @@ export function NavMain({
     }[]
   }[]
 }) {
+  const updateTitle = useWorkSpaceStore((state) => state.updateTitle)
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
@@ -53,11 +56,11 @@ export function NavMain({
                 <SidebarMenuSub>
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
-                      <SidebarMenuSubButton
+                      <SidebarMenuSubButton 
                         render={
-                          <a href={subItem.url}>
+                          <Link href={subItem.url}onClick={() => updateTitle(subItem.title)}>
                             <span>{subItem.title}</span>
-                          </a>
+                          </Link>
                         }
                       />
                     </SidebarMenuSubItem>

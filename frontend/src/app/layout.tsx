@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
-import { AuthContextProvider } from '@/context/auth/authProvider.tsx'
 import { QueryContextProvider } from '@/context/queryContext.tsx'
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { UserProvider } from '@/context/user/userProvider.tsx'
+import { WorkSpaceProvider } from '@/context/workspace/workspaceProvider'
 import "@/app/globals.css"
 import {  Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
@@ -12,7 +12,7 @@ const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
-  title: 'My App',
+  title: 'CollabAI',
   description: 'My App is a...',
 }
 
@@ -26,11 +26,11 @@ export default function RootLayout({
       <body>
         <TooltipProvider>
       <QueryContextProvider>
-        <AuthContextProvider>
           <UserProvider>
-            {children}
+            <WorkSpaceProvider>
+               {children}
+            </WorkSpaceProvider>
           </UserProvider>
-    </AuthContextProvider>
     </QueryContextProvider>
     </TooltipProvider>
       </body>

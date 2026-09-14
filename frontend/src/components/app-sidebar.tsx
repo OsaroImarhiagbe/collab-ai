@@ -1,8 +1,6 @@
 "use client"
-
 import * as React from "react"
 import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
 import { NavUser } from "@/components/nav-user"
 import { TeamSwitcher } from "@/components/team-switcher"
 import {
@@ -13,13 +11,10 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import {
-  LayoutDashboardIcon,
   KanbanIcon,
-  ListTodoIcon,
   CalendarDaysIcon,
   UsersIcon,
   Settings2Icon,
-  FolderKanbanIcon,
   RocketIcon,
   BriefcaseIcon,
 } from "lucide-react"
@@ -43,35 +38,26 @@ const data = {
     },
   ],
   navMain: [
-    {
-      title: "Overview",
-      url: "#",
-      icon: <LayoutDashboardIcon />,
-      isActive: true,
-      items: [
-        { title: "My Tasks",   url: "/task/" },
-        { title: "Assigned",   url: "#" },
-      ],
-    },
+    // {
+    //   title: "Overview",
+    //   url: "#",
+    //   icon: <LayoutDashboardIcon />,
+    //   isActive: true,
+    //   items: [
+    //     { title: "My Tasks",   url: "/task/" },
+    //     { title: "Assigned",   url: "#" },
+    //   ],
+    // },
     {
       title: "Board",
-      url: "#",
+      url: "/",
       icon: <KanbanIcon />,
       items: [
-        { title: "Sprint 14",  url: "/sprint-14" },
+        { title: "Sprint 14",  url: "/" },
         { title: "Backlog",    url: "#" },
         { title: "Roadmap",    url: "#" },
-      ],
-    },
-    {
-      title: "Tasks",
-      url: "#",
-      icon: <ListTodoIcon />,
-      items: [
         { title: "My Tasks",   url: "/task/2" },
-        { title: "All Tasks",   url: "/task/1" },
-        { title: "In Progress", url: "/task/3" },
-        { title: "Completed",   url: "/task/4" },
+        { title: "All Tasks",   url: "/task/1" }
       ],
     },
     {
@@ -106,23 +92,6 @@ const data = {
       ],
     },
   ],
-  projects: [
-    {
-      name: "Product — Sprint 14",
-      url: "#",
-      icon: <FolderKanbanIcon />,
-    },
-    {
-      name: "Marketing Campaign",
-      url: "#",
-      icon: <BriefcaseIcon />,
-    },
-    {
-      name: "Platform Infra",
-      url: "#",
-      icon: <RocketIcon />,
-    },
-  ],
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -133,7 +102,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
