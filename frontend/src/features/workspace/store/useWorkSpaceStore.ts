@@ -1,13 +1,12 @@
 // stores/authStore.ts
 import { create } from 'zustand';
+import { WorkSpace } from '../type/type';
 
 
-interface WorkSpace {
-    title:string,
-    updateTitle: (title:string) => void
-}
 
 export const useWorkSpaceStore = create<WorkSpace>((set) => ({
-    title: "",
-    updateTitle: (title) => set({ title: title }),
+    workspace_name: "Sprint 14",
+    open_createdialog:false,
+    openCreateTaskDialog: (value) => set({open_createdialog: value}),
+    updateWorkSpaceName: (title) => set({ workspace_name: title }),
 }));

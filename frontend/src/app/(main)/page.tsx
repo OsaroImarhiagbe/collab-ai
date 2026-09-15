@@ -1,14 +1,16 @@
 'use client'
-import BoardHeader from "@/features/workspace/components/board-header"
-import BoardColumn  from "@/features/workspace/components/border-column"
+import BoardHeader from "@/features/board/components/board-header"
+import BoardColumn  from "@/features/board/components/border-column"
 import { useState, useRef, } from "react"
 import type { BoardData } from "@/features/workspace/type/type"
 import { useWorkSpaceStore } from "@/features/workspace/store/useWorkSpaceStore"
+import CreateTaskDialog from "@/features/task/components/createtaskdialog"
 const currentUserId = 'u_1'
 const mockBoardData:BoardData = {
     columns: [
       { id: "TODO", title: "To do", },
       { id: "IN_PROGRESS", title: "In progress"},
+      { id: "REVIEW",title:"Review"},
       { id: "DONE", title: "Done", },
     ],
     tasks:[
@@ -70,7 +72,7 @@ export default function Page(){
   const [dragOverColId, setDragOverColId] = useState<string | null>(null);
   const dragTaskId = useRef<string | null>(null);
   const dragFromColId = useRef<string | null>(null);
-  const { title } = useWorkSpaceStore();
+  const title = useWorkSpaceStore((state) => state.title);
 
 
   function onDragStart(taskId: string) {
@@ -104,7 +106,7 @@ export default function Page(){
         header={title}
         onSearchChange={setSearch}
       />
-      <div className="flex mx-auto items-center flex-row gap-10 p-4 overflow-x-auto flex-1 items-start">
+      <div className="md:flex items-center flex-row gap-20 p-4 overflow-x-auto">
         {mockBoardData.columns.map((col) => (
           <BoardColumn
             key={col.id}
@@ -118,6 +120,7 @@ export default function Page(){
           />
         ))}
       </div>
+      <CreateTaskDialog/>
     </section>
   )
 }

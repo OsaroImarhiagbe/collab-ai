@@ -23,11 +23,11 @@ import { useGrabWorkSpace } from '@/features/workspace/hooks/useWorkSpace';
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { useRouter } from "next/navigation";
 import { useWorkSpaceStore } from "@/features/workspace/store/useWorkSpaceStore";
-
+import { useWorkSpace } from "@/context/workspace/workspaceContext";
 
 export default function MainLayout({children}:{children:ReactNode}){
-    const user = useAuthStore((state) => state.user)
     const title = useWorkSpaceStore((state) => state.title)
+    const {  name } = useWorkSpace(); // might just come from the API
     // const { data:workspace_data,isLoading } = useGrabWorkSpace(user?.user_id)
     // const router = useRouter()
     
@@ -54,7 +54,7 @@ export default function MainLayout({children}:{children:ReactNode}){
 
     return (
       <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar workspace_name={name}/>
       <SidebarInset>
         <header className="flex h-10 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">

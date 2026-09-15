@@ -63,3 +63,27 @@ export interface BoardColumnProps {
 //   color: string;
 //   tasks: Task[];
 // }
+
+import type { ReactNode } from "react";
+
+//export type TaskPriority = "low" | "medium" | "high" | "urgent";
+//export type TaskStatus = "todo" | "in_progress" | "done";
+
+export interface CreateTaskInput {
+  title: string;
+  description?: string;
+  status: TaskStatus;
+  priority: TaskPriority;
+  dueDate?: Date;
+}
+
+export interface CreateTaskFormProps {
+  onSubmit: (data: CreateTaskInput) => void;
+  onCancel?: () => void;
+  isSubmitting?: boolean;
+}
+
+export interface CreateTaskDialogProps {
+  onCreateTask? (data: CreateTaskInput) => void | Promise<void>;
+  trigger?: ReactNode;
+}

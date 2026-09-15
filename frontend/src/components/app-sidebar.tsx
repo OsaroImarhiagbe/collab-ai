@@ -14,7 +14,6 @@ import {
   KanbanIcon,
   CalendarDaysIcon,
   UsersIcon,
-  Settings2Icon,
   RocketIcon,
   BriefcaseIcon,
 } from "lucide-react"
@@ -27,12 +26,12 @@ const data = {
   },
   teams: [
     {
-      name: "Workspace 1",
+      name: "Workspace",
       logo: <BriefcaseIcon />,
       plan: "Enterprise",
     },
     {
-      name: "Workspace 2",
+      name: "Workspace",
       logo: <RocketIcon />,
       plan: "Free",
     },
@@ -54,10 +53,9 @@ const data = {
       icon: <KanbanIcon />,
       items: [
         { title: "Sprint 14",  url: "/" },
-        { title: "Backlog",    url: "#" },
-        { title: "Roadmap",    url: "#" },
+        // { title: "Backlog",    url: "#" },
+        // { title: "Roadmap",    url: "#" },
         { title: "My Tasks",   url: "/task/2" },
-        { title: "All Tasks",   url: "/task/1" }
       ],
     },
     {
@@ -75,30 +73,29 @@ const data = {
       url: "#",
       icon: <UsersIcon />,
       items: [
-        { title: "Team",        url: "#" },
-        { title: "Workload",    url: "#" },
-        { title: "Invite",      url: "#" },
+        { title: "Team",        url: "/team" },
+        { title: "Invite",      url: "/invite" },
       ],
     },
-    {
-      title: "Settings",
-      url: "#",
-      icon: <Settings2Icon />,
-      items: [
-        { title: "General",     url: "#" },
-        { title: "Workspace",   url: "#" },
-        { title: "Billing",     url: "#" },
-        { title: "Notifications", url: "#" },
-      ],
-    },
+    // {
+    //   title: "Settings",
+    //   url: "#",
+    //   icon: <Settings2Icon />,
+    //   items: [
+    //     { title: "General",     url: "#" },
+    //     { title: "Workspace",   url: "#" },
+    //     { title: "Billing",     url: "#" },
+    //     { title: "Notifications", url: "#" },
+    //   ],
+    // },
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ workspace_name, ...props }:{ workspace_name:string} & React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher teams={data.teams} workspace_name={workspace_name} />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />

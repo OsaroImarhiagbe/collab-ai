@@ -1,3 +1,4 @@
+'use client'
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -5,15 +6,15 @@ import { Input } from "@/components/ui/input";
 import { Plus, SlidersHorizontal } from "lucide-react";
 import { MEMBERS } from "@/features/workspace/data/data"
 import { cn } from "@/lib/utils";
-
-interface BoardHeaderProps {
-  totalTasks: number;
-  search: string;
-  header:string;
-  onSearchChange: (val: string) => void;
-}
+import { BoardHeaderProps } from "@/features/board/type/types";
+import { useWorkSpace } from "@/context/workspace/workspaceContext";
 
 export default function BoardHeader({ totalTasks, search, header, onSearchChange }: BoardHeaderProps) {
+  const { handleOpenCreateTask} = useWorkSpace()
+
+  function handleOpen(){ // function is used to open the create task dialog
+    handleOpenCreateTask();
+  }
   return (
     <div className="flex items-center gap-3 px-4 py-2.5 border-b bg-background flex-wrap">
       {/* Live indicator + title */}
@@ -52,7 +53,7 @@ export default function BoardHeader({ totalTasks, search, header, onSearchChange
         <SlidersHorizontal className="h-3 w-3" /> Filter
       </Button>
 
-      <Button size="sm" className="h-7 text-xs gap-1.5">
+      <Button size="sm" className="h-7 text-xs gap-1.5 hover:cursor-pointer" onClick={() => handleOpen()}>
         <Plus className="h-3 w-3" /> Add task
       </Button>
     </div>

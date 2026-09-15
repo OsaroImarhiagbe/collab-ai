@@ -1,8 +1,6 @@
 import type { Metadata } from 'next'
 import { QueryContextProvider } from '@/context/queryContext.tsx'
 import { TooltipProvider } from "@/components/ui/tooltip"
-import { UserProvider } from '@/context/user/userProvider.tsx'
-import { WorkSpaceProvider } from '@/context/workspace/workspaceProvider'
 import "@/app/globals.css"
 import {  Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
@@ -26,11 +24,7 @@ export default function RootLayout({
       <body>
         <TooltipProvider>
       <QueryContextProvider>
-          <UserProvider>
-            <WorkSpaceProvider>
                {children}
-            </WorkSpaceProvider>
-          </UserProvider>
     </QueryContextProvider>
     </TooltipProvider>
       </body>

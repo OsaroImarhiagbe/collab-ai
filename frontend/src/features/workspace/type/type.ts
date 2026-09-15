@@ -36,13 +36,22 @@ export interface Column {
   color?: string;
 }
 
-export type WorkSpace = {
-  workspace_id:string
-}
+// export type WorkSpace = {
+//   workspace_id:string
+// }
 
-export interface WorkSpaceContextType {
-  name:string,
-  handleSetName:(value:string) => void
+// export interface WorkSpaceContextType {
+//   name:string,
+//   open:boolean
+//   handleSetWorkSpaceName:(value:string) => void
+//   handleCreateTaskName: (value:string) => void,
+//   handleOpenCreateTask: () => void
+// }
+export interface WorkSpace {
+    workspace_name:string,
+    open_createdialog:boolean,
+    openCreateTaskDialog:(value:boolean) => void
+    updateWorkSpaceName: (title:string) => void
 }
 export interface BoardColumnProps {
   column: string;
@@ -56,4 +65,10 @@ export interface BoardColumnProps {
 export interface BoardData {
   tasks: Task[];
   columns: Column[];
+}
+export interface BoardHeaderProps {
+  totalTasks: number;
+  search: string;
+  header:string;
+  onSearchChange: (val: string) => void;
 }

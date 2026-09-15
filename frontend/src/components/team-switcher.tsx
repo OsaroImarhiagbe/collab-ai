@@ -21,8 +21,10 @@ import {
 import { ChevronsUpDownIcon, PlusIcon } from "lucide-react"
 
 export function TeamSwitcher({
+  workspace_name,
   teams,
 }: {
+  workspace_name:string,
   teams: {
     name: string
     logo: React.ReactNode
@@ -50,7 +52,7 @@ export function TeamSwitcher({
           {activeTeam.logo}
         </div>
         <div className="grid flex-1 text-left text-sm leading-tight">
-          <span className="truncate font-medium">{activeTeam.name}</span>
+          <span className="truncate font-medium">{workspace_name}</span>
           <span className="truncate text-xs">{activeTeam.plan}</span>
         </div>
         <ChevronsUpDownIcon className="ml-auto" />
