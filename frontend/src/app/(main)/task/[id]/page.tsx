@@ -1,8 +1,8 @@
 'use client'
-import BoardHeader from "@/features/workspace/components/board-header"
+import BoardHeader from "@/features/board/components/board-header"
 import BoardColumn  from "@/features/board/components/border-column"
 import { useState, useRef } from "react"
-import type { BoardData } from "@/features/workspace/type/type"
+import type { BoardData } from "@/features/board/type/types"
 import { use } from 'react'
 const currentUserId = 'u_1'
 const mockBoardData:BoardData = {

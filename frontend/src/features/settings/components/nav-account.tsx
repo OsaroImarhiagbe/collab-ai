@@ -6,10 +6,8 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useUser } from "@/context/user/userContext";
 import { Settings2,Bell } from "lucide-react";
 const NavAccount = () => {
-  const { activeTab, handleSetActiveTab } = useUser()
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Account</SidebarGroupLabel>

@@ -6,7 +6,6 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { useUser } from "@/context/user/userContext"; 
 import { SidebarProvider, SidebarInset} from "@/features/settings/components/sidebar"
 import { AppSidebar } from "@/features/settings/components/settings-sidebar"
 import Profile from "@/features/user/view/page";
@@ -14,10 +13,11 @@ import PreferencesPage from "@/features/settings/view/page";
 import NotificationsPage from "@/features/notifications/view/page";
 import WorkspaceSettingsPage from "@/features/workspace/view/page";
 import PeoplePage from "@/features/people/view/page";
-const Footer = () => {
-  const { open,activeTab, handleSetOpen } = useUser()
 
 
+export default function Footer(){
+
+  const activeTab = " "
   const renderContent = () => {
     switch (activeTab) {
       case "Emmanuel":
@@ -58,6 +58,3 @@ const Footer = () => {
     </Dialog>
   );
 }
-
-
-export default Footer;

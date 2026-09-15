@@ -19,7 +19,6 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { ChevronsUpDownIcon, SparklesIcon, LogOutIcon, Settings} from "lucide-react"
-import { useUser } from "@/context/user/userContext"
 
 
 export function NavUser({
@@ -32,7 +31,6 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
-  const { handleSetOpen } = useUser()
 
   return (
     <SidebarMenu>
@@ -84,7 +82,7 @@ export function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem onClick={() => handleSetOpen()}>
+              <DropdownMenuItem onClick={() => console.log("open")}>
                 <Settings/>
                 Settings
               </DropdownMenuItem>

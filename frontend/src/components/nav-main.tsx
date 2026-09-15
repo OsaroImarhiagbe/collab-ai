@@ -31,7 +31,7 @@ export function NavMain({
     }[]
   }[]
 }) {
-  const updateTitle = useWorkSpaceStore((state) => state.updateTitle)
+  const updateWorkSpaceName = useWorkSpaceStore((state) => state.updateWorkSpaceName)
 
   return (
     <SidebarGroup>
@@ -58,7 +58,7 @@ export function NavMain({
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton 
                         render={
-                          <Link href={subItem.url}onClick={() => updateTitle(subItem.title)}>
+                          <Link href={subItem.url} onClick={() => updateWorkSpaceName(subItem.title)}>
                             <span>{subItem.title}</span>
                           </Link>
                         }

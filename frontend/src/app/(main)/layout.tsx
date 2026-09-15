@@ -19,15 +19,10 @@ import {
 import Footer from "@/components/footer"
 import { Spinner } from '@/components/ui/spinner';
 import { Badge } from '@/components/ui/badge';
-import { useGrabWorkSpace } from '@/features/workspace/hooks/useWorkSpace';
-import { useAuthStore } from "@/features/auth/store/useAuthStore";
-import { useRouter } from "next/navigation";
 import { useWorkSpaceStore } from "@/features/workspace/store/useWorkSpaceStore";
-import { useWorkSpace } from "@/context/workspace/workspaceContext";
 
 export default function MainLayout({children}:{children:ReactNode}){
-    const title = useWorkSpaceStore((state) => state.title)
-    const {  name } = useWorkSpace(); // might just come from the API
+    const workspace_name = useWorkSpaceStore((state) => state.workspace_name)
     // const { data:workspace_data,isLoading } = useGrabWorkSpace(user?.user_id)
     // const router = useRouter()
     
@@ -54,7 +49,7 @@ export default function MainLayout({children}:{children:ReactNode}){
 
     return (
       <SidebarProvider>
-      <AppSidebar workspace_name={name}/>
+      <AppSidebar workspace_name={workspace_name}/>
       <SidebarInset>
         <header className="flex h-10 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
@@ -72,14 +67,16 @@ export default function MainLayout({children}:{children:ReactNode}){
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>{title}</BreadcrumbPage>
+                  <BreadcrumbPage>{workspace_name}</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
           </div>
         </header>
          {/* Each workspace screen renders here */}
-       {children}
+         <main>
+          {children}
+         </main>
       </SidebarInset>
       <>
       <Footer/>

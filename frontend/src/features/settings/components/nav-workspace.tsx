@@ -5,10 +5,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { useUser } from "@/context/user/userContext"
 import { Settings,Users } from "lucide-react"
 const NavWorkSpace = () => {
-  const { activeTab, handleSetActiveTab } = useUser()
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Work Space</SidebarGroupLabel>

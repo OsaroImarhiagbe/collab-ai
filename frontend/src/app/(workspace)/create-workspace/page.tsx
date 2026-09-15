@@ -5,20 +5,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { useCreateWorkSpace } from "@/features/workspace/hooks/useWorkSpace";
-import { useWorkSpace } from "@/context/workspace/workspaceContext";
 import DialogDemo from "@/components/loading-card";
-
+import { useWorkSpaceStore } from "@/features/workspace/store/useWorkSpaceStore";
 
 export default function Page(){
 
   const { mutateAsync:create, isPending } = useCreateWorkSpace()
+  const workspace_name = useWorkSpaceStore((state) => state.workspace_name)
+  const updateWorkSpaceName = useWorkSpaceStore( (state) => state.updateWorkSpaceName)
   
-  const { name, handleSetName } = useWorkSpace()
-  
-  const handleCreate = useCallback(async () => { // function sending a post request to create a workspace
-    await create({name:name})
-    
-  },[create,name])
+  const handleCreateWorkSpace = useCallback(async () => { // function sending a post request to create a workspace
+    await create({name:workspace_name})
+  },[create,workspace_name])
 
   const loading_true = true
 
@@ -30,10 +28,10 @@ export default function Page(){
              <div className="flex flex-col items-center space-y-2">
             <Input
             className="text-center
-            border-2"value={name}
-            onChange={(e) => handleSetName(e.target.value)}
+            border-2"value={workspace_name}
+            onChange={(e) => updateWorkSpaceName(e.target.value)}
             placeholder="Workspace name" />
-            <Button onClick={handleCreate} className="hover:cursor-pointer">
+            <Button onClick={handleCreateWorkSpace} className="hover:cursor-pointer">
                 {isPending? <Spinner data-icon="inline-start" /> : null }
                 {isPending? 'Creating....' : 'Create'}
             </Button>

@@ -1,11 +1,14 @@
-// types.ts
-//
-// Minimal shape assumed for CollabAI's task/board model. Adjust field names
-// to match your real Task/Column types from the workspace feature module —
-// this file exists so MyTasksView has something concrete to compile against.
+
+import type { BoardData,Column } from "@/features/board/type/types";
+import type { ReactNode } from "react";
+
 
 export type TaskStatus = "TODO" | "IN_PROGRESS" | "DONE";
 export type TaskPriority = "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+
+export type Priority = "HIGH" | "MEDIUM" | "LOW" | "URGENT";
+type Status = "TODO" | "IN_PROGRESS" | "DONE"
+export type TaskTag = "Bug" | "Feature" | "Design" | "Backend" | "Research";
 
 export const priorityStyles: Record<TaskPriority, string> = {
   LOW: "bg-muted text-muted-foreground border-border",
@@ -20,27 +23,17 @@ export interface Assignee {
   avatarUrl?: string | null;
 }
 
-export interface Task {
-  id: string;
-  title: string;
-  status: TaskStatus;
-  priority: TaskPriority;
-  dueDate?: string | null; // ISO date
-  assignee?: Assignee | null;
-  workspaceId: string;
-  commentCount?: number;
-}
+// export interface Task {
+//   id: string;
+//   title: string;
+//   status: TaskStatus;
+//   priority: TaskPriority;
+//   dueDate?: string | null; // ISO date
+//   assignee?: Assignee | null;
+//   workspaceId: string;
+//   commentCount?: number;
+// }
 
-export interface Column {
-  id: TaskStatus;
-  title: string;
-  taskIds: string[];
-}
-export interface BoardHeaderProps {
-  totalTasks: number;
-  search: string;
-  onSearchChange: (val: string) => void;
-}
 
 
 export interface MyTasksViewProps {
@@ -49,22 +42,6 @@ export interface MyTasksViewProps {
   onOpenTask: (taskId: string) => void;
   onAdvanceStatus: (taskId: string) => void;
 }
-export interface BoardColumnProps {
-  column: Column;
-  isDragOver: boolean;
-  onDragStart: (taskId: string) => void;
-  onDragOver: (e: React.DragEvent) => void;
-  onDragLeave: () => void;
-  onDrop: () => void;
-}
-// export interface Column {
-//   id: string;
-//   label: string;
-//   color: string;
-//   tasks: Task[];
-// }
-
-import type { ReactNode } from "react";
 
 //export type TaskPriority = "low" | "medium" | "high" | "urgent";
 //export type TaskStatus = "todo" | "in_progress" | "done";
@@ -86,4 +63,26 @@ export interface CreateTaskFormProps {
 export interface CreateTaskDialogProps {
   onCreateTask? (data: CreateTaskInput) => void | Promise<void>;
   trigger?: ReactNode;
+}
+export interface Member {
+  id: string;
+  initials: string;
+  name: string;
+  color: string;
+}
+
+
+export interface Task {
+  
+  id: string;
+  title: string;
+  tag?: TaskTag;
+  status:Status
+  priority: Priority;
+  assignee: Assignee
+  workspaceId:string
+  assignees?: Member[];
+  commentCount:number;
+  dueDate: string;
+  isOverdue?: boolean;
 }

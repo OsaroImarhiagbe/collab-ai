@@ -7,13 +7,13 @@ import { Plus, SlidersHorizontal } from "lucide-react";
 import { MEMBERS } from "@/features/workspace/data/data"
 import { cn } from "@/lib/utils";
 import { BoardHeaderProps } from "@/features/board/type/types";
-import { useWorkSpace } from "@/context/workspace/workspaceContext";
+import { useWorkSpaceStore } from "@/features/workspace/store/useWorkSpaceStore";
 
 export default function BoardHeader({ totalTasks, search, header, onSearchChange }: BoardHeaderProps) {
-  const { handleOpenCreateTask} = useWorkSpace()
+  const openCreateTaskDialog = useWorkSpaceStore( state => state.openCreateTaskDialog)
 
   function handleOpen(){ // function is used to open the create task dialog
-    handleOpenCreateTask();
+    openCreateTaskDialog(true);
   }
   return (
     <div className="flex items-center gap-3 px-4 py-2.5 border-b bg-background flex-wrap">

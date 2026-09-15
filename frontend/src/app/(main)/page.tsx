@@ -72,7 +72,7 @@ export default function Page(){
   const [dragOverColId, setDragOverColId] = useState<string | null>(null);
   const dragTaskId = useRef<string | null>(null);
   const dragFromColId = useRef<string | null>(null);
-  const title = useWorkSpaceStore((state) => state.title);
+  const workspace_name = useWorkSpaceStore((state) => state.workspace_name);
 
 
   function onDragStart(taskId: string) {
@@ -103,7 +103,7 @@ export default function Page(){
       <BoardHeader
         totalTasks={0}
         search={search}
-        header={title}
+        header={workspace_name}
         onSearchChange={setSearch}
       />
       <div className="md:flex items-center flex-row gap-20 p-4 overflow-x-auto">

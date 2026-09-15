@@ -12,26 +12,29 @@ import {
 } from "@/components/ui/dialog";
 import CreateTaskForm from "./createtaskform";
 import type { CreateTaskDialogProps, CreateTaskInput } from "@/features/task/types/types";
-import { useWorkSpace } from "@/context/workspace/workspaceContext";
+import { useWorkSpaceStore } from "@/features/workspace/store/useWorkSpaceStore";
+
+
 export default function CreateTaskDialog({
   onCreateTask,
   trigger,
 }: CreateTaskDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const{ open, handleOpenCreateTask } = useWorkSpace()
+  const openCreateTaskDialog = useWorkSpaceStore( state => state.openCreateTaskDialog)
+  const open_createdialog = useWorkSpaceStore( state => state.open_createdialog)
 
   async function handleSubmit(data: CreateTaskInput) {
     setIsSubmitting(true);
     try {
       // await onCreateTask(data);
-      handleOpenCreateTask();
+      openCreateTaskDialog(true);
     } finally {
       setIsSubmitting(false);
     }
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenCreateTask}>
+    <Dialog open={open_createdialog} onOpenChange={openCreateTaskDialog}>
       <DialogTrigger>
         {trigger ?? (
           <Button>
@@ -46,7 +49,7 @@ export default function CreateTaskDialog({
         </DialogHeader>
         <CreateTaskForm
           onSubmit={handleSubmit}
-          onCancel={() => handleOpenCreateTask()}
+          onCancel={() => openCreateTaskDialog(false)}
           isSubmitting={isSubmitting}
         />
       </DialogContent>
