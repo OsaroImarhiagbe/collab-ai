@@ -12,7 +12,7 @@ import type {
 } from "@/features/settings/type/types";
 
 
-const PeoplePage = () => {
+export default function TeamSection(){
 
 
   const [activeTab, setActiveTab] =
@@ -102,6 +102,3 @@ const PeoplePage = () => {
 
   );
 };
-
-
-export default PeoplePage;

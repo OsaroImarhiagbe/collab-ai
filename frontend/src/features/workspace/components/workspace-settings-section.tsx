@@ -7,7 +7,7 @@ import WorkspaceDomainCard from "@/features/settings/components/workspace-domain
 import type { WorkspaceSettings } from "@/features/settings/type/types";
 
 
-const WorkspaceSettingsPage = () => {
+export default function WorkspaceSettingsSection(){
 
   const [settings, setSettings] =
     useState<WorkspaceSettings>({
@@ -52,6 +52,3 @@ const WorkspaceSettingsPage = () => {
     </div>
   );
 };
-
-
-export default WorkspaceSettingsPage;

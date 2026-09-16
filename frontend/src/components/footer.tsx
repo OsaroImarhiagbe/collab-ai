@@ -8,37 +8,41 @@ import {
 } from "@/components/ui/dialog";
 import { SidebarProvider, SidebarInset} from "@/features/settings/components/sidebar"
 import { AppSidebar } from "@/features/settings/components/settings-sidebar"
-import Profile from "@/features/user/view/page";
-import PreferencesPage from "@/features/settings/view/page";
-import NotificationsPage from "@/features/notifications/view/page";
-import WorkspaceSettingsPage from "@/features/workspace/view/page";
-import PeoplePage from "@/features/people/view/page";
+import UserSection from "@/features/user/components/user-section";
+import SettingsSection from "@/features/settings/components/settings-section";
+import NotificationsSection from "@/features/notifications/component/notifications-section";
+import WorkspaceSettingsSection from "@/features/workspace/components/workspace-settings-section";
+import TeamSection from "@/features/team/component/team-section";
+import { useWorkSpaceStore } from "@/features/workspace/store/useWorkSpaceStore";
 
 
 export default function Footer(){
 
-  const activeTab = " "
+  const open_footer = useWorkSpaceStore( state => state.open_footer)
+  const openFooter = useWorkSpaceStore(state => state.openFooter)
+  const settings_tab = useWorkSpaceStore( state => state.settings_tab)
+
   const renderContent = () => {
-    switch (activeTab) {
+    switch (settings_tab) {
       case "Emmanuel":
-        return <Profile/>;
+        return <UserSection/>;
       case "Preference":
-        return <PreferencesPage/>;
+        return <SettingsSection/>;
       case "Notification":
-        return <NotificationsPage/>;
+        return <NotificationsSection/>;
       case "General":
-        return <WorkspaceSettingsPage/>
+        return <WorkspaceSettingsSection/>
       case "People":
-        return <PeoplePage/>
+        return <TeamSection/>
       default:
-        return <Profile/>
+        return <UserSection/>
 
     }
   };
  
 
   return (
-      <Dialog open={open} onOpenChange={handleSetOpen}>
+      <Dialog open={open_footer} onOpenChange={openFooter}>
       <DialogContent className="h-[800px] overflow-hidden p-0 sm:max-w-[95vw] md:max-w-7xl">
         <DialogHeader className="sr-only">
           <DialogTitle>Profile</DialogTitle>

@@ -6,13 +6,14 @@ export interface Member {
   name: string;
   color: string;
 }
-
-
-
 export interface WorkSpace {
     workspace_name:string,
     open_createdialog:boolean,
-    openCreateTaskDialog:(value:boolean) => void
+    open_footer:boolean
+    settings_tab:string
+    openCreateTaskDialog:() => void
     updateWorkSpaceName: (title:string) => void
+    openFooter:() => void
+    setSettingsTab:(value:string) => void
 }
 

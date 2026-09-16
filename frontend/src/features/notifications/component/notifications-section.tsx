@@ -6,7 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 
-const NotificationsPage = () => {
+export default function NotificationsSection(){
   const [notifications, setNotifications] = useState({
     inApp: {
       mentions: true,
@@ -152,5 +152,3 @@ function NotificationSetting({
     </div>
   );
 }
-
-export default NotificationsPage;

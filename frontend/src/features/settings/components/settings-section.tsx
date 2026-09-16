@@ -1,3 +1,4 @@
+'use client'
 import {
   Select,
   SelectContent,
@@ -7,7 +8,7 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 
-const PreferencesPage = () =>  {
+export default function PreferencesSection(){
 
   
   return (
@@ -93,5 +94,3 @@ const PreferencesPage = () =>  {
     </div>
   );
 }
-
-export default PreferencesPage;

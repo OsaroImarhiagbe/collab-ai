@@ -1,6 +1,5 @@
-import * as React from "react"
-
-import NavAccount from "./nav-account"
+'use client'
+import SettingsTab from "./settings-tab"
 import NavWorkSpace from "./nav-workspace"
 import {
   Sidebar,
@@ -23,7 +22,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarContent>
-        <NavAccount/>
+        <SettingsTab/>
         <NavWorkSpace/>
       </SidebarContent>
     </Sidebar>

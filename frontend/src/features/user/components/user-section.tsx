@@ -79,7 +79,7 @@ const mockData: ProfileModalData = {
     },
   ],
 };
-const Profile = () => {
+export default function UserSection(){
     const { user, sessions } = mockData;
     const [revoking, setRevoking] = useState<string | null>(null);
     async function handleRevoke(sessionId: string) {
@@ -239,4 +239,3 @@ const Profile = () => {
         </div>
     )
 }
-export default Profile;

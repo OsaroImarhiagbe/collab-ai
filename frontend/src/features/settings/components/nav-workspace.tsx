@@ -1,3 +1,4 @@
+'use client'
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -6,19 +7,23 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { Settings,Users } from "lucide-react"
-const NavWorkSpace = () => {
+import { useWorkSpaceStore } from "@/features/workspace/store/useWorkSpaceStore"
+
+export default function NavWorkSpace(){
+  const setSettingsTab = useWorkSpaceStore( state => state.setSettingsTab)
+  const settings_tab = useWorkSpaceStore( state => state.settings_tab)
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Work Space</SidebarGroupLabel>
       <SidebarMenu>
        <SidebarMenuItem>
-              <SidebarMenuButton onClick={() => handleSetActiveTab('General')} className={`${activeTab === 'General' ? "bg-gray-300 hover:bg-gray-300" : ""} cursor-pointer`}>
+              <SidebarMenuButton onClick={() => setSettingsTab('General')} className={`${settings_tab === 'General' ? "bg-gray-300 hover:bg-gray-300" : ""} cursor-pointer`}>
                 <Settings/>
                 <span>General</span>
               </SidebarMenuButton>
           </SidebarMenuItem>
         <SidebarMenuItem>
-              <SidebarMenuButton onClick={() => handleSetActiveTab('People')} className={`${activeTab === 'People' ? "bg-gray-300 hover:bg-gray-300" : ""} cursor-pointer`}>
+              <SidebarMenuButton onClick={() => setSettingsTab('People')} className={`${settings_tab === 'People' ? "bg-gray-300 hover:bg-gray-300" : ""} cursor-pointer`}>
                 <Users/>
                 <span>People</span>
               </SidebarMenuButton>
@@ -27,5 +32,3 @@ const NavWorkSpace = () => {
     </SidebarGroup>
   )
 }
-
-export default NavWorkSpace;

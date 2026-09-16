@@ -1,5 +1,5 @@
 
-import type { BoardData,Column } from "@/features/board/type/types";
+import type { BoardData } from "@/features/board/type/types";
 import type { ReactNode } from "react";
 
 
@@ -61,7 +61,7 @@ export interface CreateTaskFormProps {
 }
 
 export interface CreateTaskDialogProps {
-  onCreateTask? (data: CreateTaskInput) => void | Promise<void>;
+  onCreateTask?: (data: CreateTaskInput) => void | Promise<void>;
   trigger?: ReactNode;
 }
 export interface Member {

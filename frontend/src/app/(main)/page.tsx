@@ -2,7 +2,7 @@
 import BoardHeader from "@/features/board/components/board-header"
 import BoardColumn  from "@/features/board/components/border-column"
 import { useState, useRef, } from "react"
-import type { BoardData } from "@/features/workspace/type/type"
+import type { BoardData } from "@/features/board/type/types"
 import { useWorkSpaceStore } from "@/features/workspace/store/useWorkSpaceStore"
 import CreateTaskDialog from "@/features/task/components/createtaskdialog"
 const currentUserId = 'u_1'
@@ -75,26 +75,26 @@ export default function Page(){
   const workspace_name = useWorkSpaceStore((state) => state.workspace_name);
 
 
-  function onDragStart(taskId: string) {
-    dragTaskId.current = taskId;
-    dragFromColId.current =  mockBoardData.columns.find((c) => c.id === taskId)?.id ?? null;
-  }
+  // function onDragStart(taskId: string) {
+  //   dragTaskId.current = taskId;
+  //   dragFromColId.current =  mockBoardData.columns.find((c) => c.id === taskId)?.id ?? null;
+  // }
 
-  function onDragOver(e: React.DragEvent, colId: string) {
-    e.preventDefault();
-    setDragOverColId(colId);
-  }
+  // function onDragOver(e: React.DragEvent, colId: string) {
+  //   e.preventDefault();
+  //   setDragOverColId(colId);
+  // }
 
-  function onDragLeave() {
-    setDragOverColId(null);
-  }
+  // function onDragLeave() {
+  //   setDragOverColId(null);
+  // }
 
-  function onDrop(colId: string) {
-    setDragOverColId(null);
-    const tid = dragTaskId.current;
-    const fromId = dragFromColId.current;
-    if (!tid || fromId === colId) return;
-  }
+  // function onDrop(colId: string) {
+  //   setDragOverColId(null);
+  //   const tid = dragTaskId.current;
+  //   const fromId = dragFromColId.current;
+  //   if (!tid || fromId === colId) return;
+  // }
 
 
 
@@ -112,11 +112,6 @@ export default function Page(){
             key={col.id}
             column={col.title}
             tasks={mockBoardData.tasks}
-            isDragOver={dragOverColId === col.id}
-            onDragStart={onDragStart}
-            onDragOver={(e) => onDragOver(e, col.id)}
-            onDragLeave={onDragLeave}
-            onDrop={() => onDrop(col.id)}
           />
         ))}
       </div>

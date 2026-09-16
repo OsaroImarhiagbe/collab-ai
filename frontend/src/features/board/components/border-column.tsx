@@ -1,28 +1,16 @@
-
+'use client'
 import { TaskCard } from "@/features/task/components/task-card"
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { BoardColumnProps } from "@/features/workspace/type/type";
 
 
-export default function BoardColumn({
-  column,
-  isDragOver,
-  tasks,
-  onDragStart,
-  onDragOver,
-  onDragLeave,
-  onDrop,
-}: BoardColumnProps) {
+export default function BoardColumn() {
  const isDone = true
 
   return (
     <div
-      onDragOver={onDragOver}
-      onDragLeave={onDragLeave}
-      onDrop={onDrop}
       className={cn(
         "flex flex-col w-[230px] shrink-0 rounded-xl border bg-muted/50 transition-colors",
         isDragOver && "border-blue-400 bg-blue-50/50 dark:bg-blue-950/20"
