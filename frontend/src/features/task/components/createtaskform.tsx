@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
@@ -26,20 +25,19 @@ import type {
   TaskStatus,
 } from "@/features/task/types/types";
 
-const DEFAULT_VALUES: CreateTaskInput = {
-  title: "",
-  description: "",
-  status: "todo",
-  priority: "medium",
-  dueDate: undefined,
-};
 
 export default function CreateTaskForm({
   onSubmit,
   onCancel,
   isSubmitting,
 }: CreateTaskFormProps) {
-  const [formData, setFormData] = useState<CreateTaskInput>(DEFAULT_VALUES);
+  const [formData, setFormData] = useState<CreateTaskInput>({
+    title: "",
+    description: "",
+    status: "todo",
+    priority: "medium",
+    dueDate: undefined,
+  });
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -118,7 +116,7 @@ export default function CreateTaskForm({
       <div className="space-y-2">
         <Label>Due date</Label>
         <Popover>
-          <PopoverTrigger asChild>
+          <PopoverTrigger>
             <Button
               type="button"
               variant="outline"

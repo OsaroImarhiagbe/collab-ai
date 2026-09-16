@@ -1,7 +1,7 @@
 'use client'
 import BoardHeader from "@/features/board/components/board-header"
 import BoardColumn  from "@/features/board/components/border-column"
-import { useState, useRef, } from "react"
+import { useState } from "react"
 import type { BoardData } from "@/features/board/type/types"
 import { useWorkSpaceStore } from "@/features/workspace/store/useWorkSpaceStore"
 import CreateTaskDialog from "@/features/task/components/createtaskdialog"
@@ -69,9 +69,9 @@ const mockBoardData:BoardData = {
 export default function Page(){
   const [search, setSearch] = useState("");
   // const totalTasks = mockBoardData.tasks.reduce((sum, c) => sum + c.tasks.length, 0);
-  const [dragOverColId, setDragOverColId] = useState<string | null>(null);
-  const dragTaskId = useRef<string | null>(null);
-  const dragFromColId = useRef<string | null>(null);
+  // const [dragOverColId, setDragOverColId] = useState<string | null>(null);
+  // const dragTaskId = useRef<string | null>(null);
+  // const dragFromColId = useRef<string | null>(null);
   const workspace_name = useWorkSpaceStore((state) => state.workspace_name);
 
 
@@ -115,7 +115,9 @@ export default function Page(){
           />
         ))}
       </div>
-      <CreateTaskDialog/>
+      <>
+       <CreateTaskDialog/>
+      </>
     </section>
   )
 }

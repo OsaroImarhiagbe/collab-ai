@@ -12,9 +12,7 @@ import { useWorkSpaceStore } from "@/features/workspace/store/useWorkSpaceStore"
 export default function BoardHeader({ totalTasks, search, header, onSearchChange }: BoardHeaderProps) {
   const openCreateTaskDialog = useWorkSpaceStore( state => state.openCreateTaskDialog)
 
-  function handleOpen(){ // function is used to open the create task dialog
-    openCreateTaskDialog(true);
-  }
+
   return (
     <div className="flex items-center gap-3 px-4 py-2.5 border-b bg-background flex-wrap">
       {/* Live indicator + title */}
@@ -53,7 +51,7 @@ export default function BoardHeader({ totalTasks, search, header, onSearchChange
         <SlidersHorizontal className="h-3 w-3" /> Filter
       </Button>
 
-      <Button size="sm" className="h-7 text-xs gap-1.5 hover:cursor-pointer" onClick={() => handleOpen()}>
+      <Button size="sm" className="h-7 text-xs gap-1.5 hover:cursor-pointer" onClick={() => openCreateTaskDialog()}>
         <Plus className="h-3 w-3" /> Add task
       </Button>
     </div>

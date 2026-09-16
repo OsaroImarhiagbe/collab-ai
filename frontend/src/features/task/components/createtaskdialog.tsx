@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { Plus } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,23 +10,21 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import CreateTaskForm from "./createtaskform";
-import type { CreateTaskDialogProps, CreateTaskInput } from "@/features/task/types/types";
+import type {  CreateTaskInput } from "@/features/task/types/types";
 import { useWorkSpaceStore } from "@/features/workspace/store/useWorkSpaceStore";
 
 
-export default function CreateTaskDialog({
-  onCreateTask,
-  trigger,
-}: CreateTaskDialogProps) {
+export default function CreateTaskDialog() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const openCreateTaskDialog = useWorkSpaceStore( state => state.openCreateTaskDialog)
   const open_createdialog = useWorkSpaceStore( state => state.open_createdialog)
 
+  const trigger= true;
   async function handleSubmit(data: CreateTaskInput) {
     setIsSubmitting(true);
     try {
       // await onCreateTask(data);
-      openCreateTaskDialog(true);
+      openCreateTaskDialog();
     } finally {
       setIsSubmitting(false);
     }
@@ -49,7 +46,7 @@ export default function CreateTaskDialog({
         </DialogHeader>
         <CreateTaskForm
           onSubmit={handleSubmit}
-          onCancel={() => openCreateTaskDialog(false)}
+          onCancel={() => openCreateTaskDialog()}
           isSubmitting={isSubmitting}
         />
       </DialogContent>

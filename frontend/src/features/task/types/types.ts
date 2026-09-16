@@ -3,9 +3,11 @@ import type { BoardData } from "@/features/board/type/types";
 import type { ReactNode } from "react";
 
 
-export type TaskStatus = "TODO" | "IN_PROGRESS" | "DONE";
-export type TaskPriority = "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+// export type TaskStatus = "TODO" | "IN_PROGRESS" | "DONE";
+// export type TaskPriority = "LOW" | "MEDIUM" | "HIGH" | "URGENT";
 
+export type TaskPriority = "low" | "medium" | "high" | "urgent";
+export type TaskStatus = "todo" | "in_progress" | "done";
 export type Priority = "HIGH" | "MEDIUM" | "LOW" | "URGENT";
 type Status = "TODO" | "IN_PROGRESS" | "DONE"
 export type TaskTag = "Bug" | "Feature" | "Design" | "Backend" | "Research";
@@ -43,12 +45,11 @@ export interface MyTasksViewProps {
   onAdvanceStatus: (taskId: string) => void;
 }
 
-//export type TaskPriority = "low" | "medium" | "high" | "urgent";
-//export type TaskStatus = "todo" | "in_progress" | "done";
+
 
 export interface CreateTaskInput {
   title: string;
-  description?: string;
+  description: string;
   status: TaskStatus;
   priority: TaskPriority;
   dueDate?: Date;
